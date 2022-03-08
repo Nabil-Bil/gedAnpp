@@ -17,6 +17,7 @@
         <h2 class="mb-12 text-center text-5xl font-extrabold">Welcome.</h2>
         <form @submit.prevent="login">
           <div class="mb-4">
+            <div v-if="errors.email" class="text-red-500 my-4">{{errors.email}}</div>
             <label class="block mb-1" for="email">Email-Address</label>
             <input
               id="email"
@@ -42,6 +43,7 @@
             />
           </div>
           <div class="mb-4">
+            <div v-if="errors.password" class="text-red-500 text my-4">{{errors.password}}</div>
             <label class="block mb-1" for="password">Password</label>
             <input
               id="password"
@@ -126,7 +128,8 @@
 
 <script>
 import { Inertia } from '@inertiajs/inertia'
-import { reactive, toRefs } from '@vue/reactivity';
+import { reactive ,toRefs} from '@vue/reactivity';
+
 export default {
   setup() {
       const data=reactive({
@@ -142,5 +145,8 @@ export default {
 
     };
   },
+  props:{
+    errors:Object,
+  }
 };
 </script>
