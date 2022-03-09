@@ -62,3 +62,29 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Installation
+***
+A little intro about the installation.
+```
+$ git clone https://github.com/Nabil-Bil/gedAnpp.git
+```
+```
+$ npm install 
+```
+```
+$ composer install
+```
+```
+$ cp .env.example .env
+```
+```
+$ php artisan key:generate
+```
+```
+$ php artisan migrate --seed
+```
+
+```
+Note : you need to create a pixabay account to generate an api key.
+```
