@@ -17,72 +17,45 @@
         <h2 class="mb-12 text-center text-5xl font-extrabold">Welcome.</h2>
         <form @submit.prevent="login">
           <div class="mb-4">
-            <div v-if="errors.email" class="text-red-500 my-4">{{errors.email}}</div>
-            <label class="block mb-1" for="email">Email-Address</label>
-            <input
-              id="email"
-              type="text"
-              name="email"
-              v-model="email"
-              class="
-                py-2
-                px-3
-                border border-gray-300
-                focus:border-red-300
-                focus:outline-none
-                focus:ring
-                focus:ring-red-200
-                focus:ring-opacity-50
-                rounded-md
-                shadow-sm
-                disabled:bg-gray-100
-                mt-1
-                block
-                w-full
-              "
-            />
+            <!-- <label class="block mb-1" for="email">Email-Address</label> -->
+            <span class="p-float-label p-input-icon-left w-full my-4">
+              <i class="pi pi-user" />
+              <InputText
+                id="email"
+                type="text"
+                name="email"
+                v-model="email"
+                class="py-2 px-3 shadow-sm mt-1 block w-full"
+                :class="errors.email ? 'p-invalid': ''"
+              />
+              <label for="email">Email-Address</label>
+            </span>
+            <small id="email-error" class="p-error">{{errors.email}}</small>
           </div>
           <div class="mb-4">
-            <div v-if="errors.password" class="text-red-500 text my-4">{{errors.password}}</div>
-            <label class="block mb-1" for="password">Password</label>
-            <input
-              id="password"
-              type="password"
-              name="password"
-              v-model="password"
-              class="
-                py-2
-                px-3
-                border border-gray-300
-                focus:border-red-300
-                focus:outline-none
-                focus:ring
-                focus:ring-red-200
-                focus:ring-opacity-50
-                rounded-md
-                shadow-sm
-                disabled:bg-gray-100
-                mt-1
-                block
-                w-full
-              "
-            />
+              <span class="p-float-label p-input-icon-left w-full my-4">
+                <i class="pi pi-lock" />
+                
+                <InputText
+                  id="password"
+                  type="password"
+                  name="password"
+                  v-model="password"
+                  class="py-2 px-3 shadow-sm mt-1 block w-full"
+                  :class="errors.password ? 'p-invalid': ''"
+                />
+                <label for="password">Password</label>
+              </span>
+              <small id="password-error" class="p-error">{{errors.password}}</small>
+              
           </div>
           <div class="mt-6 flex items-center justify-between">
             <div class="flex items-center">
-              <input
+              <CheckBox
                 id="remember_me"
-                type="checkbox"
-                class="
-                  border border-gray-300
-                  text-red-600
-                  shadow-sm
-                  focus:border-red-300
-                  focus:ring
-                  focus:ring-red-200
-                  focus:ring-opacity-50
-                "
-              />
+                v-model="remember_me"
+                :binary="true"
+              ></CheckBox>
               <label
                 for="remember_me"
                 class="ml-2 block text-sm leading-5 text-gray-900"
@@ -93,7 +66,7 @@
             <a href="#" class="text-sm"> Forgot your password? </a>
           </div>
           <div class="mt-6">
-            <button
+            <Button
               class="
                 w-full
                 inline-flex
@@ -101,24 +74,13 @@
                 justify-center
                 px-4
                 py-2
-                bg-red-600
-                border border-transparent
-                rounded-md
                 font-semibold
                 capitalize
-                text-white
-                hover:bg-red-700
-                active:bg-red-700
-                focus:outline-none
-                focus:border-red-700
-                focus:ring
-                focus:ring-red-200
-                disabled:opacity-25
-                transition
               "
+              @click="login"
             >
-              Sign In
-            </button>
+              sign In
+            </Button>
           </div>
         </form>
       </div>
@@ -127,26 +89,26 @@
 </template>
 
 <script>
-import { Inertia } from '@inertiajs/inertia'
-import { reactive ,toRefs} from '@vue/reactivity';
+import { Inertia } from "@inertiajs/inertia";
+import { reactive, ref, toRefs } from "@vue/reactivity";
 
 export default {
   setup() {
-      const data=reactive({
-          email:'',
-          password:'',
-      })
-      const login = ()=>{
-          Inertia.post('/login',{...data});
-      }
+    const data = reactive({
+      email: "",
+      password: "",
+      remember_me: false,
+    });
+    const login = () => {
+      Inertia.post("/login", { ...data });
+    };
     return {
-        ...toRefs(data),
-        login
-
+      ...toRefs(data),
+      login,
     };
   },
-  props:{
-    errors:Object,
-  }
+  props: {
+    errors: Object,
+  },
 };
 </script>

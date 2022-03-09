@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
@@ -17,7 +19,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'Auth/Login');
 
-Route::get('/dashboard',function()
-{
-    return Inertia::render('Dashboard');
-})->middleware('auth');
+Route::middleware('auth')->group(function () {
+    Route::prefix('dashboard')->group(function(){
+        Route::get('/', [DashboardController::class, 'index']);
+        Route::get('/library', [DashboardController::class, 'library']);
+        Route::get('/following', [DashboardController::class, 'following']);
+    });
+});
