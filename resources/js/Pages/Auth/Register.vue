@@ -1,8 +1,9 @@
 <template>
     <div>
-       <DashboardLayoutVue :UserData="user_data">
-           Library
-           </DashboardLayoutVue>
+        <DashboardLayoutVue :UserData="user_data">
+            
+
+        </DashboardLayoutVue>
     </div>
 </template>
 
@@ -12,7 +13,9 @@ import DashboardLayoutVue from "../Layouts/DashboardLayout.vue"
         components:{
             DashboardLayoutVue
         },
-        props:['user_data']
+        props:{
+            'user_data':Object
+        }
     }
 </script>
 

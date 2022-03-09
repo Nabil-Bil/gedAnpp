@@ -9,10 +9,11 @@
 
         <div class="mb-10" v-for="link in links" :key="link.name">
             <Link
-          class="mx-6 mb-2 text-xs text-gray-400 uppercase tracking-widest"
+          class="flex items-center px-6 py-2.5 text-gray-500 hover:text-blue-600 group"
           :href="link.href"
         >
-          {{ link.name }}
+        <i class="pi group-hover:text-blue-600 h-5 w-5 text-gray-400 mr-2" :class="link.icon" />
+          <p class="font-bold text-lg">{{ link.name }}</p>
         </Link>
         </div>
     </div>
@@ -69,19 +70,19 @@ export default {
   setup() {
     const sideBarVisibility = ref(false);
     const links=ref([{
-            name:'Main',
+            name:'Home',
             href:'/dashboard',
-            icon:''
+            icon:'pi-home'
         },
          {
-            name:'Library',
-            href:'/dashboard/library',
-            icon:''
+            name:'Register',
+            href:'/dashboard/register',
+            icon:'pi-sign-in'
         },
          {
-            name:'Following',
-            href:'/dashboard/following',
-            icon:''
+            name:'Other',
+            href:'#',
+            icon:'pi-sign-out'
         },]);
 
 

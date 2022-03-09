@@ -15,6 +15,7 @@ import Sidebar from 'primevue/sidebar';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
 import CheckBox from 'primevue/checkbox'
+import Chart from "primevue/chart"
 
 
 createInertiaApp({
@@ -27,6 +28,7 @@ createInertiaApp({
       .component('Button',Button)
       .component('InputText',InputText)
       .component('CheckBox',CheckBox)
+      .component('Chart',Chart)
       .mount(el)
   },
 })

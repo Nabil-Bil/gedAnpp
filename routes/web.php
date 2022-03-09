@@ -22,7 +22,6 @@ Route::inertia('/', 'Auth/Login');
 Route::middleware('auth')->group(function () {
     Route::prefix('dashboard')->group(function(){
         Route::get('/', [DashboardController::class, 'index']);
-        Route::get('/library', [DashboardController::class, 'library']);
-        Route::get('/following', [DashboardController::class, 'following']);
+        Route::get('/register',[DashboardController::class,'registerView']);
     });
 });
