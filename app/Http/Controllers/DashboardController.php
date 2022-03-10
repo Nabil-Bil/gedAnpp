@@ -22,4 +22,10 @@ class DashboardController extends Controller
             'user_data'=>Auth::user(),
         ]);
     }
+
+    public function document(){
+        return Inertia::render('Contents/Document',[
+            'user_data'=>Auth::user(),
+        ]);
+    }
 }

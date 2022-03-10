@@ -21,7 +21,8 @@ Route::inertia('/', 'Auth/Login');
 
 Route::middleware('auth')->group(function () {
     Route::prefix('dashboard')->group(function(){
-        Route::get('/', [DashboardController::class, 'index']);
-        Route::get('/register',[DashboardController::class,'registerView']);
+        Route::get('/', [DashboardController::class, 'index'])->name('dashboard.home');
+        Route::get('/register',[DashboardController::class,'registerView'])->name("dashboard.register");
+        Route::get('/document',[DashboardController::class,'document'])->name("dashboard.document");
     });
 });

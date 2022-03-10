@@ -100,7 +100,7 @@ export default {
       remember_me: false,
     });
     const login = () => {
-      Inertia.post("/login", { ...data });
+      Inertia.post(route('login'), { ...data });
     };
     return {
       ...toRefs(data),

@@ -21,14 +21,13 @@ import Chart from "primevue/chart"
 createInertiaApp({
   resolve: name => require(`./Pages/${name}`),
   setup({ el, App, props, plugin }) {
-    createApp({ render: () => h(App, props) })
-      .use(plugin)
+    const app = createApp({ render: () => h(App, props) });
+    app.use(plugin)
       .use(Primevue)
-      .component('Sidebar',Sidebar)
-      .component('Button',Button)
-      .component('InputText',InputText)
-      .component('CheckBox',CheckBox)
-      .component('Chart',Chart)
-      .mount(el)
+      .component('Sidebar', Sidebar)
+      .component('Button', Button)
+      .component('InputText', InputText)
+      .component('CheckBox', CheckBox)
+      .component('Chart', Chart).mount(el)
   },
 })

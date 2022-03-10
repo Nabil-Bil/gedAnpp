@@ -7,15 +7,21 @@
         </a>
       </div>
 
-        <div class="mb-10" v-for="link in links" :key="link.name">
-            <Link
-          class="flex items-center px-6 py-2.5 text-gray-500 hover:text-blue-600 group"
-          :href="link.href"
+      <div class="mb-10" v-for="link in links" :key="link.name">
+        <Link
+          class="flex items-center px-6 py-2.5 hover:text-blue-600 group"
+          :href="link.route"
+          :class="
+            currentRoute == link.route ? 'text-blue-600' : 'text-gray-500'
+          "
         >
-        <i class="pi group-hover:text-blue-600 h-5 w-5 text-gray-400 mr-2" :class="link.icon" />
+          <i
+            class="pi group-hover:text-blue-600 h-5 w-5 text-gray-400 mr-2"
+            :class="link.icon"
+          />
           <p class="font-bold text-lg">{{ link.name }}</p>
         </Link>
-        </div>
+      </div>
     </div>
 
     <div class="flex-1">
@@ -39,10 +45,13 @@
         <div
           class="profile-picture rounded-full cursor-pointer"
           @click="sideBarVisibility = true"
-          :style="{backgroundImage: 'url('+ UserData.path+')'}"
+          :style="{ backgroundImage: 'url(' + UserData.path + ')' }"
         ></div>
       </div>
-      <ProfileVue :SideBarVisibility="sideBarVisibility" :UserData="UserData"></ProfileVue>
+      <ProfileVue
+        :SideBarVisibility="sideBarVisibility"
+        :UserData="UserData"
+      ></ProfileVue>
 
       <main>
         <slot />
@@ -64,35 +73,38 @@ export default {
     MenuItem,
     MenuItems,
     Link,
-    ProfileVue
+    ProfileVue,
   },
 
   setup() {
+    const currentRoute = ref(route(route().current()));
+
     const sideBarVisibility = ref(false);
-    const links=ref([{
-            name:'Home',
-            href:'/dashboard',
-            icon:'pi-home'
-        },
-         {
-            name:'Register',
-            href:'/dashboard/register',
-            icon:'pi-sign-in'
-        },
-         {
-            name:'Other',
-            href:'#',
-            icon:'pi-sign-out'
-        },]);
-
-
+    const links = ref([
+      {
+        name: "Home",
+        route: route("dashboard.home"),
+        icon: "pi-home",
+      },
+      {
+        name: "Register",
+        route: route("dashboard.register"),
+        icon: "pi-sign-in",
+      },
+      {
+        name: "Documents",
+        route: route('dashboard.document'),
+        icon: "pi-sign-out",
+      },
+    ]);
 
     return {
       sideBarVisibility,
       links,
+      currentRoute,
     };
   },
-  props: ["UserData",],
+  props: ["UserData"],
 };
 </script>
 

@@ -13,12 +13,12 @@
           <Chart
             type="pie"
             :data="chartData"
-            :options="lightOptions"
+
             class="p-chart"
           ></Chart>
         </div>
       </div>
-      <div class=" flex justify-center items-center"><Chart type="radar" :data="radar_data" height="600" width="600"></Chart></div>
+      <div class=" flex justify-center items-center"><Chart type="radar" :data="radar_data" :height="600" :width="600"></Chart></div>
       
     </DashboardLayoutVue>
   </div>
@@ -36,7 +36,6 @@ export default {
     users_number: Array,
   },
   setup(props) {
-    console.log(props.users_number[0]["number"]);
     const chartData = ref({
       labels: [
         props.users_number[0]["role"],
