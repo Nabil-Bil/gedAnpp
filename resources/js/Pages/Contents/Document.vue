@@ -3,7 +3,7 @@
     <DashboardLayoutVue :UserData="user_data"
       ><iframe
         class="w-full"
-        style="height:85vh;"
+        style="height:85vh; "
         src="http://www.africau.edu/images/default/sample.pdf"
       ></iframe
     ></DashboardLayoutVue>
