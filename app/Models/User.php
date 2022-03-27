@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -18,9 +19,12 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
+        'direction_id',
+        'role',
     ];
 
     /**
@@ -41,4 +45,25 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function getCreatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->format('m/d/Y');
+    }
+
+
+
+    public function getRoleAttribute($value){
+        if($value=='super admin'){
+            return "Admin";
+        }
+        else{
+            return ucfirst($value);
+        }
+    }
+    public function direction()
+    {
+        return $this->belongsTo(Direction::class,'direction_id');
+    }
+
 }

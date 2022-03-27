@@ -15,43 +15,38 @@
             currentRoute == link.route ? 'text-blue-600' : 'text-gray-500'
           "
         >
-          <i
-            class="pi group-hover:text-blue-600 h-5 w-5 text-gray-400 mr-2"
-            :class="link.icon"
-          />
+          <i class="pi group-hover:text-blue-600 h-5 w-5 text-gray-400 mr-2" :class="link.icon" />
           <p class="font-bold text-lg">{{ link.name }}</p>
         </Link>
       </div>
     </div>
 
     <div class="flex-1">
-      <div
-        class="
-          flex
-          justify-between
-          py-3
-          px-6
-          bg-gray-50
-          border-b
-          space-x-5
-          items-center
-        "
-      >
-        <div class="flex flex-row">
-          <div class="mx-5">item</div>
-          <div class="mx-5">item</div>
-          <div class="mx-5">item</div>
-        </div>
+      <div class="flex justify-between py-3 px-6 bg-gray-50 border-b space-x-5 items-center w-full">
+        <slot name="Items">
+          <div></div>
+        </slot>
         <div
           class="profile-picture rounded-full cursor-pointer"
           @click="sideBarVisibility = true"
-          :style="{ backgroundImage: 'url(' + UserData.path + ')' }"
+          :style="{
+            backgroundImage: 'url(' + UserData.path_image + ')',
+          }"
         ></div>
+        <Sidebar v-model:visible="sideBarVisibility" position="right" class="p-sidebar-md">
+          <div class="flex flex-col justify-between" style="height: 90vh">
+            <div>
+              <h2>First Name : {{ UserData.first_name }}</h2>
+              <h2>Last Name : {{ UserData.last_name }}</h2>
+              <h2>Email : {{ UserData.email }}</h2>
+              <h2>Direction Name : {{ UserData.direction }}</h2>
+            </div>
+            <div>
+              <Button label="Logout" class="p-button-text" @click="logout" />
+            </div>
+          </div>
+        </Sidebar>
       </div>
-      <ProfileVue
-        :SideBarVisibility="sideBarVisibility"
-        :UserData="UserData"
-      ></ProfileVue>
 
       <main>
         <slot />
@@ -61,24 +56,19 @@
 </template>
 
 <script>
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import { ref } from "vue";
 import { Link } from "@inertiajs/inertia-vue3";
 import ProfileVue from "../Components/Profile.vue";
+import { Inertia } from "@inertiajs/inertia";
 
 export default {
   components: {
-    Menu,
-    MenuButton,
-    MenuItem,
-    MenuItems,
     Link,
     ProfileVue,
   },
 
   setup() {
     const currentRoute = ref(route(route().current()));
-
     const sideBarVisibility = ref(false);
     const links = ref([
       {
@@ -88,20 +78,30 @@ export default {
       },
       {
         name: "Register",
-        route: route("dashboard.register"),
+        route: route("register"),
         icon: "pi-sign-in",
       },
       {
-        name: "Documents",
-        route: route('dashboard.document'),
-        icon: "pi-sign-out",
+        name: "Directions",
+        route: route("directions.index"),
+        icon: "pi-building",
+      },
+       {
+        name: "Users",
+        route: route("users.index"),
+        icon: "pi-user",
       },
     ]);
+
+    function logout() {
+      Inertia.post("/logout");
+    }
 
     return {
       sideBarVisibility,
       links,
       currentRoute,
+      logout,
     };
   },
   props: ["UserData"],
