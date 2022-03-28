@@ -8,21 +8,38 @@
       </div>
 
       <div class="mb-10" v-for="link in links" :key="link.name">
-        <Link
-          class="flex items-center px-6 py-2.5 hover:text-blue-600 group"
-          :href="link.route"
-          :class="
-            currentRoute == link.route ? 'text-blue-600' : 'text-gray-500'
-          "
-        >
-          <i class="pi group-hover:text-blue-600 h-5 w-5 text-gray-400 mr-2" :class="link.icon" />
-          <p class="font-bold text-lg">{{ link.name }}</p>
-        </Link>
+        <div v-if="link.role==UserData.role || link.role=='any'">
+          <Link
+            class="flex items-center px-6 py-2.5 hover:text-blue-600 group"
+            :href="link.route"
+            :class="
+              currentRoute == link.route ? 'text-blue-600' : 'text-gray-500'
+            "
+          >
+            <i
+              class="pi group-hover:text-blue-600 h-5 w-5 text-gray-400 mr-2"
+              :class="link.icon"
+            />
+            <p class="font-bold text-lg">{{ link.name }}</p>
+          </Link>
+        </div>
       </div>
     </div>
 
     <div class="flex-1">
-      <div class="flex justify-between py-3 px-6 bg-gray-50 border-b space-x-5 items-center w-full">
+      <div
+        class="
+          flex
+          justify-between
+          py-3
+          px-6
+          bg-gray-50
+          border-b
+          space-x-5
+          items-center
+          w-full
+        "
+      >
         <slot name="Items">
           <div></div>
         </slot>
@@ -33,7 +50,11 @@
             backgroundImage: 'url(' + UserData.path_image + ')',
           }"
         ></div>
-        <Sidebar v-model:visible="sideBarVisibility" position="right" class="p-sidebar-md">
+        <Sidebar
+          v-model:visible="sideBarVisibility"
+          position="right"
+          class="p-sidebar-md"
+        >
           <div class="flex flex-col justify-between" style="height: 90vh">
             <div>
               <h2>First Name : {{ UserData.first_name }}</h2>
@@ -56,10 +77,11 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { Link } from "@inertiajs/inertia-vue3";
 import ProfileVue from "../Components/Profile.vue";
 import { Inertia } from "@inertiajs/inertia";
+import data from "./links.json";
 
 export default {
   components: {
@@ -70,28 +92,18 @@ export default {
   setup() {
     const currentRoute = ref(route(route().current()));
     const sideBarVisibility = ref(false);
-    const links = ref([
-      {
-        name: "Home",
-        route: route("dashboard.home"),
-        icon: "pi-home",
-      },
-      {
-        name: "Register",
-        route: route("register"),
-        icon: "pi-sign-in",
-      },
-      {
-        name: "Directions",
-        route: route("directions.index"),
-        icon: "pi-building",
-      },
-       {
-        name: "Users",
-        route: route("users.index"),
-        icon: "pi-user",
-      },
-    ]);
+    const links = ref([]);
+
+    onMounted(() => {
+      data.forEach((element) => {
+        links.value.push({
+          name: element.name,
+          route: route(element.routeName),
+          icon: element.icon,
+          role: element.role
+        });
+      });
+    });
 
     function logout() {
       Inertia.post("/logout");

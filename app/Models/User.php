@@ -52,15 +52,6 @@ class User extends Authenticatable
     }
 
 
-
-    public function getRoleAttribute($value){
-        if($value=='super admin'){
-            return "Admin";
-        }
-        else{
-            return ucfirst($value);
-        }
-    }
     public function direction()
     {
         return $this->belongsTo(Direction::class,'direction_id');

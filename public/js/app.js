@@ -21723,10 +21723,16 @@ __webpack_require__.r(__webpack_exports__);
     users_number: Array
   },
   setup: function setup(props) {
+    var labels = [];
+    var data = [];
+    props.users_number.forEach(function (element) {
+      labels.push(element.role);
+      data.push(element.number);
+    });
     var chartData = (0,_vue_reactivity__WEBPACK_IMPORTED_MODULE_1__.ref)({
-      labels: [props.users_number[0]["role"], props.users_number[1]["role"], props.users_number[2]["role"]],
+      labels: labels,
       datasets: [{
-        data: [props.users_number[0]["number"], props.users_number[1]["number"], props.users_number[2]["number"]],
+        data: data,
         backgroundColor: ["#42A5F5", "#66BB6A", "#FFA726"],
         hoverBackgroundColor: ["#64B5F6", "#81C784", "#FFB74D"]
       }]
@@ -21885,6 +21891,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @inertiajs/inertia-vue3 */ "./node_modules/@inertiajs/inertia-vue3/dist/index.js");
 /* harmony import */ var _Components_Profile_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Components/Profile.vue */ "./resources/js/Pages/Components/Profile.vue");
 /* harmony import */ var _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @inertiajs/inertia */ "./node_modules/@inertiajs/inertia/dist/index.js");
+/* harmony import */ var _links_json__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./links.json */ "./resources/js/Pages/Layouts/links.json");
+
 
 
 
@@ -21897,23 +21905,17 @@ __webpack_require__.r(__webpack_exports__);
   setup: function setup() {
     var currentRoute = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(route(route().current()));
     var sideBarVisibility = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(false);
-    var links = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)([{
-      name: "Home",
-      route: route("dashboard.home"),
-      icon: "pi-home"
-    }, {
-      name: "Register",
-      route: route("register"),
-      icon: "pi-sign-in"
-    }, {
-      name: "Directions",
-      route: route("directions.index"),
-      icon: "pi-building"
-    }, {
-      name: "Users",
-      route: route("users.index"),
-      icon: "pi-user"
-    }]);
+    var links = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)([]);
+    (0,vue__WEBPACK_IMPORTED_MODULE_0__.onMounted)(function () {
+      _links_json__WEBPACK_IMPORTED_MODULE_4__.forEach(function (element) {
+        links.value.push({
+          name: element.name,
+          route: route(element.routeName),
+          icon: element.icon,
+          role: element.role
+        });
+      });
+    });
 
     function logout() {
       _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_3__.Inertia.post("/logout");
@@ -22972,20 +22974,23 @@ var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 );
 
 var _hoisted_4 = {
-  "class": "font-bold text-lg"
+  key: 0
 };
 var _hoisted_5 = {
-  "class": "flex-1"
+  "class": "font-bold text-lg"
 };
 var _hoisted_6 = {
+  "class": "flex-1"
+};
+var _hoisted_7 = {
   "class": "flex justify-between py-3 px-6 bg-gray-50 border-b space-x-5 items-center w-full"
 };
 
-var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, null, -1
+var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, null, -1
 /* HOISTED */
 );
 
-var _hoisted_8 = {
+var _hoisted_9 = {
   "class": "flex flex-col justify-between",
   style: {
     "height": "90vh"
@@ -23002,7 +23007,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
       "class": "mb-10",
       key: link.name
-    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    }, [link.role == $props.UserData.role || link.role == 'any' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
       "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["flex items-center px-6 py-2.5 hover:text-blue-600 group", $setup.currentRoute == link.route ? 'text-blue-600' : 'text-gray-500']),
       href: link.route
     }, {
@@ -23011,7 +23016,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["pi group-hover:text-blue-600 h-5 w-5 text-gray-400 mr-2", link.icon])
         }, null, 2
         /* CLASS */
-        ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(link.name), 1
+        ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(link.name), 1
         /* TEXT */
         )];
       }),
@@ -23020,11 +23025,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
     }, 1032
     /* PROPS, DYNAMIC_SLOTS */
-    , ["href", "class"])]);
+    , ["href", "class"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]);
   }), 128
   /* KEYED_FRAGMENT */
-  ))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.renderSlot)(_ctx.$slots, "Items", {}, function () {
-    return [_hoisted_7];
+  ))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.renderSlot)(_ctx.$slots, "Items", {}, function () {
+    return [_hoisted_8];
   }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "profile-picture rounded-full cursor-pointer",
     onClick: _cache[0] || (_cache[0] = function ($event) {
@@ -23044,7 +23049,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "p-sidebar-md"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", null, "First Name : " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.UserData.first_name), 1
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", null, "First Name : " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.UserData.first_name), 1
       /* TEXT */
       ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", null, "Last Name : " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.UserData.last_name), 1
       /* TEXT */
@@ -59539,7 +59544,9 @@ var map = {
 	"./Contents/Users": "./resources/js/Pages/Contents/Users.vue",
 	"./Contents/Users.vue": "./resources/js/Pages/Contents/Users.vue",
 	"./Layouts/DashboardLayout": "./resources/js/Pages/Layouts/DashboardLayout.vue",
-	"./Layouts/DashboardLayout.vue": "./resources/js/Pages/Layouts/DashboardLayout.vue"
+	"./Layouts/DashboardLayout.vue": "./resources/js/Pages/Layouts/DashboardLayout.vue",
+	"./Layouts/links": "./resources/js/Pages/Layouts/links.json",
+	"./Layouts/links.json": "./resources/js/Pages/Layouts/links.json"
 };
 
 
@@ -59582,6 +59589,17 @@ webpackContext.id = "./resources/js/Pages sync recursive ^\\.\\/.*$";
 
 "use strict";
 module.exports = JSON.parse('{"name":"axios","version":"0.21.4","description":"Promise based HTTP client for the browser and node.js","main":"index.js","scripts":{"test":"grunt test","start":"node ./sandbox/server.js","build":"NODE_ENV=production grunt build","preversion":"npm test","version":"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json","postversion":"git push && git push --tags","examples":"node ./examples/server.js","coveralls":"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js","fix":"eslint --fix lib/**/*.js"},"repository":{"type":"git","url":"https://github.com/axios/axios.git"},"keywords":["xhr","http","ajax","promise","node"],"author":"Matt Zabriskie","license":"MIT","bugs":{"url":"https://github.com/axios/axios/issues"},"homepage":"https://axios-http.com","devDependencies":{"coveralls":"^3.0.0","es6-promise":"^4.2.4","grunt":"^1.3.0","grunt-banner":"^0.6.0","grunt-cli":"^1.2.0","grunt-contrib-clean":"^1.1.0","grunt-contrib-watch":"^1.0.0","grunt-eslint":"^23.0.0","grunt-karma":"^4.0.0","grunt-mocha-test":"^0.13.3","grunt-ts":"^6.0.0-beta.19","grunt-webpack":"^4.0.2","istanbul-instrumenter-loader":"^1.0.0","jasmine-core":"^2.4.1","karma":"^6.3.2","karma-chrome-launcher":"^3.1.0","karma-firefox-launcher":"^2.1.0","karma-jasmine":"^1.1.1","karma-jasmine-ajax":"^0.1.13","karma-safari-launcher":"^1.0.0","karma-sauce-launcher":"^4.3.6","karma-sinon":"^1.0.5","karma-sourcemap-loader":"^0.3.8","karma-webpack":"^4.0.2","load-grunt-tasks":"^3.5.2","minimist":"^1.2.0","mocha":"^8.2.1","sinon":"^4.5.0","terser-webpack-plugin":"^4.2.3","typescript":"^4.0.5","url-search-params":"^0.10.0","webpack":"^4.44.2","webpack-dev-server":"^3.11.0"},"browser":{"./lib/adapters/http.js":"./lib/adapters/xhr.js"},"jsdelivr":"dist/axios.min.js","unpkg":"dist/axios.min.js","typings":"./index.d.ts","dependencies":{"follow-redirects":"^1.14.0"},"bundlesize":[{"path":"./dist/axios.min.js","threshold":"5kB"}]}');
+
+/***/ }),
+
+/***/ "./resources/js/Pages/Layouts/links.json":
+/*!***********************************************!*\
+  !*** ./resources/js/Pages/Layouts/links.json ***!
+  \***********************************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = JSON.parse('[{"name":"Home","routeName":"dashboard.home","icon":"pi-home","role":"any"},{"name":"Register","routeName":"register","icon":"pi-sign-in","role":"super admin"},{"name":"Directions","routeName":"directions.index","icon":"pi-building","role":"super admin"},{"name":"Users","routeName":"users.index","icon":"pi-user","role":"super admin"}]');
 
 /***/ })
 

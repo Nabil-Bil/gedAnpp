@@ -15,7 +15,7 @@ class AdminController extends Controller
     {
         return Inertia::render('Contents/Home', [
             'user_data' => $this->getUserData(),
-            'users_number' => DB::select('select role,count(*) as number from users group by role')
+            'users_number' => DB::select('select role,count(*) as number from users group by role'),
         ]);
     }
     public function registerView()
@@ -23,9 +23,8 @@ class AdminController extends Controller
 
         return Inertia::render('Auth/Register', [
             'user_data' => $this->getUserData(),
-            "directions"=>[
-                ...Direction::all(['id',"name"]),
-            ]
+            "directions"=>Direction::all(['id',"name"]),
+            
         ]);
     }
 

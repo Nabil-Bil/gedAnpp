@@ -29,7 +29,7 @@ class Controller extends BaseController
             "last_name" => Auth::user()->last_name,
             "email" => Auth::user()->email,
             "role" => Auth::user()->role,
-            "path_image" =>Storage::Disk("public")->url(Auth::user()->path_image),
+            "path_image" =>asset(Storage::url(Auth::user()->path_image)),
             "direction"=>$directionName,
         ];
     }

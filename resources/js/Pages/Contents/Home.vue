@@ -36,19 +36,17 @@ export default {
     users_number: Array,
   },
   setup(props) {
+    const labels=[];
+    const data=[];
+    props.users_number.forEach(element => {
+      labels.push(element.role);
+      data.push(element.number);
+    });
     const chartData = ref({
-      labels: [
-        props.users_number[0]["role"],
-        props.users_number[1]["role"],
-        props.users_number[2]["role"],
-      ],
+      labels: labels,
       datasets: [
         {
-          data: [
-            props.users_number[0]["number"],
-            props.users_number[1]["number"],
-            props.users_number[2]["number"],
-          ],
+          data:data,
           backgroundColor: ["#42A5F5", "#66BB6A", "#FFA726"],
           hoverBackgroundColor: ["#64B5F6", "#81C784", "#FFB74D"],
         },

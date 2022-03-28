@@ -489,11 +489,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .w-5 {
   width: 1.25rem;
 }
-.w-max {
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
-}
 .flex-1 {
   flex: 1 1 0%;
 }
@@ -505,9 +500,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .items-center {
   align-items: center;
-}
-.justify-end {
-  justify-content: flex-end;
 }
 .justify-center {
   justify-content: center;
@@ -522,9 +514,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-space-x-reverse: 0;
   margin-right: calc(1.25rem * var(--tw-space-x-reverse));
   margin-left: calc(1.25rem * calc(1 - var(--tw-space-x-reverse)));
-}
-.self-end {
-  align-self: flex-end;
 }
 .rounded-full {
   border-radius: 9999px;
@@ -560,10 +549,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .px-4 {
   padding-left: 1rem;
   padding-right: 1rem;
-}
-.px-24 {
-  padding-left: 6rem;
-  padding-right: 6rem;
 }
 .px-2 {
   padding-left: 0.5rem;

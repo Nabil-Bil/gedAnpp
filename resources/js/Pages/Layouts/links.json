@@ -1,0 +1,28 @@
+[
+    {
+        "name": "Home",
+        "routeName": "dashboard.home",
+        "icon": "pi-home",
+        "role": "any"
+      },
+      {
+        "name": "Register",
+        "routeName": "register",
+        "icon": "pi-sign-in",
+        "role": "super admin"
+
+      },
+      {
+        "name": "Directions",
+        "routeName": "directions.index",
+        "icon": "pi-building",
+        "role": "super admin"
+
+      },
+       {
+        "name": "Users",
+        "routeName": "users.index",
+        "icon": "pi-user",
+        "role": "super admin"
+      }
+]
