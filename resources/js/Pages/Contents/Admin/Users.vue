@@ -52,9 +52,15 @@
               <InputText v-model="data[field]" />
             </template>
           </Column>
-          <Column field="role" header="Role" style="width: 20%">
+          <Column field="role"  header="Role" style="width: 20%">
             <template #editor="{ data, field }">
-              <InputText v-model="data[field]" />
+              <Dropdown
+                v-model="data[field]"
+                :options="roles"
+                optionLabel="key"
+                optionValue="value"
+                class="w-full"
+              />
             </template>
           </Column>
           <Column field="direction_name" header="Direction" style="width: 20%">
@@ -63,7 +69,7 @@
                 v-model="data[field]"
                 :options="directions"
                 optionLabel="name"
-                placeholder="Select New Direction"
+                optionValue="name"
                 class="w-full"
               />
             </template>
@@ -87,7 +93,7 @@
 
 <script>
 import { ref, computed, watch } from "vue";
-import DashboardLayoutVue from "../Layouts/DashboardLayout.vue";
+import DashboardLayoutVue from "../../Layouts/DashboardLayout.vue";
 import { Inertia } from "@inertiajs/inertia";
 export default {
   components: {
@@ -98,28 +104,44 @@ export default {
     const editingRows = ref([]);
     const allUsers = ref([]);
 
-    props.users.forEach((element) => {
-      allUsers.value.push({
-        id: element.id,
-        first_name: element.first_name,
-        last_name: element.last_name,
-        role: element.role,
-        email: element.email,
-        direction_id: element.direction.id,
-        direction_name: element.direction.name,
-      });
+    props.users.forEach(element => {
+      allUsers.value.push(element)
     });
+
     const isDisabled = computed({
       get() {
         return selectedUsers.value.length == 0 ? true : false;
       },
     });
 
+    const roles = [
+      {
+        key: "Admin",
+        value: "administrateur",
+      },
+      {
+        key: "Directeur",
+        value: "directeur",
+      },
+      {
+        key: "Evaluateur",
+        value: "evaluateur",
+      },
+    ];
+
     function onRowEditSave(event) {
       let { newData, index } = event;
-      allUsers.value[index] = newData;
-      allUsers.value[index].direction_id = newData.direction_name.id;
-      allUsers.value[index].direction_name = newData.direction_name.name;
+      allUsers.value[index]={
+        direction_id : newData.direction_name.id,
+        direction_name : newData.direction_name.name,
+        email:newData.email,
+        first_name: newData.first_name,
+        last_name : newData.last_name,
+        role: newData.role,
+        id:newData.id
+      }
+
+      Inertia.put('/dashboard/users/'+ allUsers.value[index].id, allUsers.value[index]);
     }
 
     function destroyUsers() {
@@ -141,15 +163,7 @@ export default {
       (newVal) => {
         allUsers.value = [];
         props.users.forEach((element) => {
-          allUsers.value.push({
-            id: element.id,
-            first_name: element.first_name,
-            last_name: element.last_name,
-            role: element.role,
-            email: element.email,
-            direction_id: element.direction.id,
-            direction_name: element.direction.name,
-          });
+          allUsers.value.push(element);
         });
       }
     );
@@ -161,6 +175,7 @@ export default {
       isDisabled,
       addNewUser,
       destroyUsers,
+      roles
     };
   },
   props: ["user_data", "users", "directions"],

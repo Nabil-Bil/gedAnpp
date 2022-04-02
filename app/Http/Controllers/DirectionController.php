@@ -17,7 +17,7 @@ class DirectionController extends Controller
     public function index()
     {
         $allDirections=Direction::all();
-        return Inertia::render('Contents/Directions', [
+        return Inertia::render('Contents/Admin/Directions', [
             'user_data' => $this->getUserData(),
             "directions"=>$allDirections,
         ]);

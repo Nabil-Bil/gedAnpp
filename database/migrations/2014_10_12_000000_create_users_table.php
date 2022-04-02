@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('path_image')->default("profilePictures/default.png");
             $table->timestamps();
         });
-        DB::statement("ALTER TABLE users ADD CONSTRAINT ck_role CHECK (role in ('super admin','directeur','evaluateur'))");
+        DB::statement("ALTER TABLE users ADD CONSTRAINT ck_role CHECK (role in ('administrateur','directeur','evaluateur'))");
     }
 
     /**

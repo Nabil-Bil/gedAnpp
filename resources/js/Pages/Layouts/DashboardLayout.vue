@@ -8,7 +8,6 @@
       </div>
 
       <div class="mb-10" v-for="link in links" :key="link.name">
-        <div v-if="link.role==UserData.role || link.role=='any'">
           <Link
             class="flex items-center px-6 py-2.5 hover:text-blue-600 group"
             :href="link.route"
@@ -22,7 +21,6 @@
             />
             <p class="font-bold text-lg">{{ link.name }}</p>
           </Link>
-        </div>
       </div>
     </div>
 
@@ -100,7 +98,6 @@ export default {
           name: element.name,
           route: route(element.routeName),
           icon: element.icon,
-          role: element.role
         });
       });
     });

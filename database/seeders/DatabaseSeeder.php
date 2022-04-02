@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
             'last_name'=>'admin',
             'email'=>'admin@ged.dz',
             'password'=>Hash::make('admin@ged.dz'),
-            'role'=>'super admin',
+            'role'=>'administrateur',
             "direction_id"=>"1",
 
             

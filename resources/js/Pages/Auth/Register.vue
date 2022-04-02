@@ -89,10 +89,10 @@ export default {
       }
       return false
     });
-    const roles = [
+   const roles = [
       {
         key: "Admin",
-        value: "super admin",
+        value: "administrateur",
       },
       {
         key: "Directeur",
@@ -103,6 +103,7 @@ export default {
         value: "evaluateur",
       },
     ];
+
     function register() {
       Inertia.post("/dashboard/users", data);
     }

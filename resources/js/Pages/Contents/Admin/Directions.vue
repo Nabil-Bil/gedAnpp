@@ -120,7 +120,7 @@
 </template>
 
 <script>
-import DashboardLayoutVue from "../Layouts/DashboardLayout.vue";
+import DashboardLayoutVue from "../../Layouts/DashboardLayout.vue";
 import { computed, reactive, ref, toRefs, watch } from "vue";
 import { Inertia } from "@inertiajs/inertia";
 

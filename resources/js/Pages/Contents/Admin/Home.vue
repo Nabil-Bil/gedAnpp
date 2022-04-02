@@ -26,7 +26,7 @@
 
 <script>
 import { ref } from "@vue/reactivity";
-import DashboardLayoutVue from "../Layouts/DashboardLayout.vue";
+import DashboardLayoutVue from "../../Layouts/DashboardLayout.vue";
 export default {
   components: {
     DashboardLayoutVue,

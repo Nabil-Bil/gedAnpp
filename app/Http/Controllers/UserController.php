@@ -29,10 +29,11 @@ class UserController extends Controller
                 'last_name' => $user->last_name,
                 "email" => $user->email,
                 "role" => $user->role,
-                "direction" => $user->direction,
+                "direction_id"=>$user->direction->id,
+                "direction_name"=>$user->direction->name
             ]);
         }
-        return Inertia::render('Contents/Users', [
+        return Inertia::render('Contents/Admin/Users', [
             'user_data' => $this->getUserData(),
             'users' => $allUsers,
             "directions" => Direction::all(),
@@ -89,7 +90,29 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique(User::class)->ignore($id),
+            ],
+            "direction_id" => ['required', 'exists:App\Models\Direction,id',],
+            "role" => ['required', Rule::in(['super admin', 'directeur', 'evaluateur'])]
+        ]);
+
+        User::find($id)->update([
+            "direction_id"=>$request->direction_id,
+            "first_name"=>$request->first_name,
+            "last_name"=>$request->last_name,
+            "email"=>$request->email,
+            "role"=>$request->role,
+        ]);
+
+        return Redirect::route("users.index");
     }
 
     public function destroy(Request $request)

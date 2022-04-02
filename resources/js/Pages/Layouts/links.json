@@ -2,27 +2,23 @@
     {
         "name": "Home",
         "routeName": "dashboard.home",
-        "icon": "pi-home",
-        "role": "any"
+        "icon": "pi-home"
       },
       {
         "name": "Register",
         "routeName": "register",
-        "icon": "pi-sign-in",
-        "role": "super admin"
+        "icon": "pi-sign-in"
 
       },
       {
         "name": "Directions",
         "routeName": "directions.index",
-        "icon": "pi-building",
-        "role": "super admin"
+        "icon": "pi-building"
 
       },
        {
         "name": "Users",
         "routeName": "users.index",
-        "icon": "pi-user",
-        "role": "super admin"
+        "icon": "pi-user"
       }
 ]
