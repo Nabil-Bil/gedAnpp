@@ -2,6 +2,7 @@
   <div>
     <DashboardLayoutVue :UserData="user_data">
       <form class="card p-24" @submit.prevent="register" method="POST">
+        <h2 class="pb-10 font-bold text-xl">Create New User</h2>
         <div class="formgrid grid">
           <div class="field col-12 md:col-6">
             <label for="firstname">Firstname</label>

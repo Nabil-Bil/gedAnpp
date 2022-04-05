@@ -1,29 +1,26 @@
 <template>
   <div class="flex min-h-screen">
-    <div class="w-64 bg-gray-50 border-r border-gray-200">
-      <div class="py-4 px-6">
-        <a href="#" class="flex justify-center">
-          <p class="font-bold text-3xl h-9">Logo</p>
-        </a>
-      </div>
-
+    <Sidebar
+      v-model:visible="leftSideBarVisibility"
+      position="left"
+      class="p-sidebar-sm bg-gray-50"
+    >
       <div class="mb-10" v-for="link in links" :key="link.name">
-          <Link
-            class="flex items-center px-6 py-2.5 hover:text-blue-600 group"
-            :href="link.route"
-            :class="
-              currentRoute == link.route ? 'text-blue-600' : 'text-gray-500'
-            "
-          >
-            <i
-              class="pi group-hover:text-blue-600 h-5 w-5 text-gray-400 mr-2"
-              :class="link.icon"
-            />
-            <p class="font-bold text-lg">{{ link.name }}</p>
-          </Link>
+        <Link
+          class="flex items-center px-6 py-2.5 hover:text-blue-600 group"
+          :href="link.route"
+          :class="
+            currentRoute == link.route ? 'text-blue-600' : 'text-gray-500'
+          "
+        >
+          <i
+            class="pi group-hover:text-blue-600 h-5 w-5 text-gray-400 mr-2"
+            :class="link.icon"
+          />
+          <p class="font-bold text-lg">{{ link.name }}</p>
+        </Link>
       </div>
-    </div>
-
+    </Sidebar>
     <div class="flex-1">
       <div
         class="
@@ -38,18 +35,22 @@
           w-full
         "
       >
-        <slot name="Items">
-          <div></div>
-        </slot>
+        <div class="flex items-center">
+          <Button @click="leftSideBarVisibility = true" class="p-button p-button-outlined p-button-rounded p-button-secondary" icon="pi pi-ellipsis-v"></Button>
+          <slot name="Items">
+            <div></div>
+          </slot>
+        </div>
+
         <div
           class="profile-picture rounded-full cursor-pointer"
-          @click="sideBarVisibility = true"
+          @click="rightSideBarVisibility = true"
           :style="{
             backgroundImage: 'url(' + UserData.path_image + ')',
           }"
         ></div>
         <Sidebar
-          v-model:visible="sideBarVisibility"
+          v-model:visible="rightSideBarVisibility"
           position="right"
           class="p-sidebar-md"
         >
@@ -89,7 +90,8 @@ export default {
 
   setup() {
     const currentRoute = ref(route(route().current()));
-    const sideBarVisibility = ref(false);
+    const rightSideBarVisibility = ref(false);
+    const leftSideBarVisibility = ref(false);
     const links = ref([]);
 
     onMounted(() => {
@@ -107,7 +109,8 @@ export default {
     }
 
     return {
-      sideBarVisibility,
+      rightSideBarVisibility,
+      leftSideBarVisibility,
       links,
       currentRoute,
       logout,

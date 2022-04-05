@@ -22,7 +22,7 @@ class UserController extends Controller
     public function index()
     {
         $allUsers = [];
-        foreach (User::all()->except(Auth::user()->id) as $user) {
+        foreach (User::orderBy('created_at','DESC')->get()->except(Auth::user()->id) as $user) {
             array_push($allUsers, [
                 "id" => $user->id,
                 "first_name" => $user->first_name,
@@ -39,6 +39,21 @@ class UserController extends Controller
             "directions" => Direction::all(),
         ]);
     }
+
+        /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        return Inertia::render('Auth/Register', [
+            'user_data' => $this->getUserData(),
+            "directions"=>Direction::all(['id',"name"]),
+            
+        ]);
+    }
+    
 
 
 

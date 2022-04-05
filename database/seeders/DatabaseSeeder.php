@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Direction;
+use App\Models\PharmaceuticalEstablishment;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -18,7 +19,7 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
-        Direction::factory(2)->create();
+        Direction::factory(100)->create();
 
         User::create([
             'first_name'=>'admin',
@@ -49,7 +50,8 @@ class DatabaseSeeder extends Seeder
             "direction_id"=>"2",
         ]);
 
-        User::factory(20)->create();
+        User::factory(100)->create();
+        PharmaceuticalEstablishment::factory(100)->create();
         
     }
 }

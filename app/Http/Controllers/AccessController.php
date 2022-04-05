@@ -3,15 +3,12 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
-use App\Models\Direction;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
-
-class AdminController extends Controller
+class AccessController extends Controller
 {
-    
-
     public function index()
     {
         if(Auth::user()->role=='administrateur'){
@@ -25,15 +22,4 @@ class AdminController extends Controller
         }
         
     }
-    public function registerView()
-    {
-
-        return Inertia::render('Auth/Register', [
-            'user_data' => $this->getUserData(),
-            "directions"=>Direction::all(['id',"name"]),
-            
-        ]);
-    }
-
- 
 }
