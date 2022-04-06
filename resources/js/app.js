@@ -21,6 +21,8 @@ import Dropdown from 'primevue/dropdown';
 import DataTable from "primevue/datatable"
 import Column from "primevue/column"
 import Dialog from 'primevue/dialog';
+import { FilterMatchMode, FilterOperator } from "primevue/api";
+
 
 
 createInertiaApp({
@@ -29,6 +31,7 @@ createInertiaApp({
     const app = createApp({ render: () => h(App, props) });
     app.use(plugin)
       .use(Primevue)
+
       .component('Sidebar', Sidebar)
       .component('Button', Button)
       .component('InputText', InputText)

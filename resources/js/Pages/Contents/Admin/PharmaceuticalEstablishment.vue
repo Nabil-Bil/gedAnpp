@@ -41,9 +41,47 @@
           dataKey="id"
           responsiveLayout="scroll"
           v-model:selection="selectedPharmaceuticalEstablishments"
+          v-model:filters="filters"
+          filterDisplay="menu"
+
+          :globalFilterFields="[
+            'name',
+            'email',
+            'fixed',
+            'mobile',
+            'address',
+            'nature',
+            'fax',
+            'agreement',
+            'status',
+            'manager_name',
+            'tech_manager_name',
+            'activity',
+          ]"
         >
+          <template #header>
+            <div class="flex justify-between">
+              <Button
+                type="button"
+                icon="pi pi-filter-slash"
+                label="Clear"
+                class="p-button-outlined"
+                @click="clearFilter()"
+              />
+              <span class="p-input-icon-left">
+                <i class="pi pi-search" />
+                <InputText
+                  v-model="filters['global'].value"
+                  placeholder="Keyword Search"
+                />
+              </span>
+            </div>
+          </template>
+          <template #empty> No Pharmaceutical Establishment found. </template>
+          <template #loading> Loading Pharmaceutical Establishment data. Please wait. </template>
           <Column selectionMode="multiple" headerStyle="width: 3em"></Column>
           <Column
+            :sortable="true"
             v-for="col of columns"
             :key="col.field"
             :field="col.field"
@@ -54,8 +92,13 @@
               <InputText v-model="data[field]" autofocus />
             </template>
           </Column>
+          <Column field="created_at" header="Created At"></Column>
 
-          <Column :rowEditor="true" style="width:5%; " bodyStyle="text-align:center"></Column>
+          <Column
+            :rowEditor="true"
+            style="width: 5%"
+            bodyStyle="text-align:center"
+          ></Column>
         </DataTable>
       </div>
     </DashboardLayoutVue>
@@ -64,8 +107,9 @@
 
 <script>
 import DashboardLayoutVue from "../../Layouts/DashboardLayout.vue";
-import { computed, ref,watch } from "vue";
-import { Inertia } from '@inertiajs/inertia';
+import { computed, ref, watch } from "vue";
+import { Inertia } from "@inertiajs/inertia";
+import { FilterMatchMode, FilterOperator } from "primevue/api";
 
 export default {
   components: { DashboardLayoutVue },
@@ -83,10 +127,13 @@ export default {
       { field: "manager_name", header: "Manager Name" },
       { field: "tech_manager_name", header: "Technical Manager Name" },
       { field: "activity", header: "Activity" },
+      
     ]);
 
     const selectedPharmaceuticalEstablishments = ref([]);
-    const allPharmaceuticalEstablishment=ref(props.PharmaceuticalEstablishments);
+    const allPharmaceuticalEstablishment = ref(
+      props.PharmaceuticalEstablishments
+    );
 
     const isDisabled = computed({
       get() {
@@ -98,30 +145,84 @@ export default {
     const editingRows = ref([]);
 
     const addNewPharmaceuticalEstablishement = () => {
-      Inertia.get('/dashboard/pharmaceuticalEstablishment/create/');
+      Inertia.get("/dashboard/pharmaceuticalEstablishment/create/");
     };
 
-    function destroyPharmaceuticalEstablishements(){
+    const filters = ref({
+      global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      name: {
+        operator: FilterOperator.AND,
+        constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
+      },
+      email: {
+        operator: FilterOperator.AND,
+        constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
+      },
+      fixed: {
+        operator: FilterOperator.AND,
+        constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
+      },
+      mobile: {
+        operator: FilterOperator.AND,
+        constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
+      },
+      address: {
+        operator: FilterOperator.AND,
+        constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
+      },
+      nature: {
+        operator: FilterOperator.AND,
+        constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
+      },
+      fax: {
+        operator: FilterOperator.AND,
+        constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
+      },
+      agreement: {
+        operator: FilterOperator.AND,
+        constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
+      },
+      status: {
+        operator: FilterOperator.AND,
+        constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
+      },
+      manager_name: {
+        operator: FilterOperator.AND,
+        constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
+      },
+      tech_manager_name: {
+        operator: FilterOperator.AND,
+        constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
+      },
+      activity: {
+        operator: FilterOperator.AND,
+        constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
+      },
+    });
+    function destroyPharmaceuticalEstablishements() {
       const selectedIds = [];
 
       selectedPharmaceuticalEstablishments.value.forEach((element) => {
         selectedIds.push(element.id);
       });
-      Inertia.post("/dashboard/pharmaceuticalEstablishment/destroy", { ids: [...selectedIds] });
+      Inertia.post("/dashboard/pharmaceuticalEstablishment/destroy", {
+        ids: [...selectedIds],
+      });
 
       selectedPharmaceuticalEstablishments.value = [];
-    };
+    }
 
     function onRowEditSave(event) {
       let { newData, index } = event;
 
       allPharmaceuticalEstablishment.value[index] = newData;
       Inertia.put(
-        "/dashboard/pharmaceuticalEstablishment/" + allPharmaceuticalEstablishment.value[index].id,
+        "/dashboard/pharmaceuticalEstablishment/" +
+          allPharmaceuticalEstablishment.value[index].id,
         newData
       );
     }
-        watch(
+    watch(
       () => [...props.PharmaceuticalEstablishments],
       (newVal) => {
         allPharmaceuticalEstablishment.value = [];
@@ -130,6 +231,88 @@ export default {
         });
       }
     );
+
+    function clearFilter() {
+      initFilters();
+    }
+
+    function initFilters() {
+      filters.value = {
+        global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        name: {
+          operator: FilterOperator.AND,
+          constraints: [
+            { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+          ],
+        },
+        email: {
+          operator: FilterOperator.AND,
+          constraints: [
+            { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+          ],
+        },
+        fixed: {
+          operator: FilterOperator.AND,
+          constraints: [
+            { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+          ],
+        },
+        mobile: {
+          operator: FilterOperator.AND,
+          constraints: [
+            { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+          ],
+        },
+        address: {
+          operator: FilterOperator.AND,
+          constraints: [
+            { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+          ],
+        },
+        nature: {
+          operator: FilterOperator.AND,
+          constraints: [
+            { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+          ],
+        },
+        fax: {
+          operator: FilterOperator.AND,
+          constraints: [
+            { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+          ],
+        },
+        agreement: {
+          operator: FilterOperator.AND,
+          constraints: [
+            { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+          ],
+        },
+        status: {
+          operator: FilterOperator.AND,
+          constraints: [
+            { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+          ],
+        },
+        manager_name: {
+          operator: FilterOperator.AND,
+          constraints: [
+            { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+          ],
+        },
+        tech_manager_name: {
+          operator: FilterOperator.AND,
+          constraints: [
+            { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+          ],
+        },
+        activity: {
+          operator: FilterOperator.AND,
+          constraints: [
+            { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+          ],
+        },
+      };
+    }
     return {
       addNewPharmaceuticalEstablishement,
       destroyPharmaceuticalEstablishements,
@@ -138,7 +321,9 @@ export default {
       selectedPharmaceuticalEstablishments,
       editingRows,
       onRowEditSave,
-      allPharmaceuticalEstablishment
+      allPharmaceuticalEstablishment,
+      filters,
+      clearFilter,
     };
   },
   props: ["user_data", "PharmaceuticalEstablishments"],
@@ -154,6 +339,5 @@ span.p-column-title {
 div.p-column-header-content {
   justify-content: center;
 }
-
 </style>
 

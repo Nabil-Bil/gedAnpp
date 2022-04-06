@@ -87,12 +87,37 @@
           @row-edit-save="onRowEditSave"
           responsiveLayout="scroll"
           v-model:selection="selectedDirections"
+          v-model:filters="filters"
+          filterDisplay="menu"
+          :globalFilterFields="['name', 'service']"
         >
+          <template #header>
+            <div class="flex justify-between">
+              <Button
+                type="button"
+                icon="pi pi-filter-slash"
+                label="Clear"
+                class="p-button-outlined"
+                @click="clearFilter()"
+              />
+              <span class="p-input-icon-left">
+                <i class="pi pi-search" />
+                <InputText
+                  v-model="filters['global'].value"
+                  placeholder="Keyword Search"
+                />
+              </span>
+            </div>
+          </template>
+          <template #empty> No Direction found. </template>
+          <template #loading> Loading Directions data. Please wait. </template>
+
           <Column
             selectionMode="multiple"
             style="width: 5%; text-align: center; justify-content: center"
           ></Column>
           <Column
+            :sortable="true"
             field="name"
             header="Name"
             style="width: 30%; text-align: center"
@@ -102,6 +127,7 @@
             </template>
           </Column>
           <Column
+            :sortable="true"
             field="service"
             header="Service"
             style="width: 30%; text-align: center"
@@ -111,6 +137,7 @@
             </template>
           </Column>
           <Column
+            :sortable="true"
             field="created_at"
             header="Created At"
             style="width: 30%; text-align: center"
@@ -131,6 +158,7 @@
 import DashboardLayoutVue from "../../Layouts/DashboardLayout.vue";
 import { computed, reactive, ref, toRefs, watch } from "vue";
 import { Inertia } from "@inertiajs/inertia";
+import { FilterMatchMode, FilterOperator } from "primevue/api";
 
 export default {
   components: {
@@ -144,6 +172,17 @@ export default {
     const newDirection = reactive({
       name: "",
       service: "",
+    });
+    const filters = ref({
+      global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      name: {
+        operator: FilterOperator.AND,
+        constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
+      },
+      service: {
+        operator: FilterOperator.AND,
+        constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
+      },
     });
     const selectedDirections = ref([]);
     const isDisabled = computed({
@@ -192,6 +231,28 @@ export default {
       selectedDirections.value = [];
     };
 
+    function clearFilter() {
+      initFilters();
+    }
+
+    function initFilters() {
+      filters.value = {
+        global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        name: {
+          operator: FilterOperator.AND,
+          constraints: [
+            { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+          ],
+        },
+        service: {
+          operator: FilterOperator.AND,
+          constraints: [
+            { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+          ],
+        },
+      };
+    }
+
     return {
       editingRows,
       allDirections,
@@ -203,6 +264,8 @@ export default {
       selectedDirections,
       destroyDirections,
       isDisabled,
+      filters,
+      clearFilter,
     };
   },
 };

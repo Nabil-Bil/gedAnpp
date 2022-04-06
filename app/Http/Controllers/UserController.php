@@ -30,7 +30,8 @@ class UserController extends Controller
                 "email" => $user->email,
                 "role" => $user->role,
                 "direction_id"=>$user->direction->id,
-                "direction_name"=>$user->direction->name
+                "direction_name"=>$user->direction->name,
+                "created_at"=>$user->created_at
             ]);
         }
         return Inertia::render('Contents/Admin/Users', [

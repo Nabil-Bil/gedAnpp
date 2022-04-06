@@ -38,12 +38,43 @@
           @row-edit-save="onRowEditSave"
           responsiveLayout="scroll"
           v-model:selection="selectedUsers"
+          v-model:filters="filters"
+          filterDisplay="menu"
+          :globalFilterFields="[
+            'first_name',
+            'last_name',
+            'email',
+            'role',
+            'direction_name',
+          ]"
         >
+          <template #header>
+            <div class="flex justify-between">
+              <Button
+                type="button"
+                icon="pi pi-filter-slash"
+                label="Clear"
+                class="p-button-outlined"
+                @click="clearFilter()"
+              />
+              <span class="p-input-icon-left">
+                <i class="pi pi-search" />
+                <InputText
+                  v-model="filters['global'].value"
+                  placeholder="Keyword Search"
+                />
+              </span>
+            </div>
+          </template>
+          <template #empty> No User found. </template>
+          <template #loading> Loading Users data. Please wait. </template>
+
           <Column
             selectionMode="multiple"
             style="width: 5%; text-align: center"
           ></Column>
           <Column
+            :sortable="true"
             field="first_name"
             header="First name"
             style="width: 20%; text-align: center"
@@ -53,6 +84,7 @@
             </template>
           </Column>
           <Column
+            :sortable="true"
             field="last_name"
             header="Last name"
             style="width: 15%; text-align: center"
@@ -62,6 +94,7 @@
             </template>
           </Column>
           <Column
+            :sortable="true"
             field="email"
             header="Email"
             style="width: 15%; text-align: center"
@@ -71,6 +104,7 @@
             </template>
           </Column>
           <Column
+            :sortable="true"
             field="role"
             header="Role"
             style="width: 15%; text-align: center"
@@ -86,6 +120,7 @@
             </template>
           </Column>
           <Column
+            :sortable="true"
             field="direction_name"
             header="Direction"
             style="width: 15%; text-align: center"
@@ -100,6 +135,12 @@
               />
             </template>
           </Column>
+          <Column
+            field="created_at"
+            header="Created At"
+            style="width: 15%; text-align: center"
+            :sortable="true"
+          ></Column>
           <Column
             :rowEditor="true"
             style="width: 5%; min-width: 8rem"
@@ -116,6 +157,8 @@
 import { ref, computed, watch } from "vue";
 import DashboardLayoutVue from "../../Layouts/DashboardLayout.vue";
 import { Inertia } from "@inertiajs/inertia";
+import { FilterMatchMode, FilterOperator } from "primevue/api";
+
 export default {
   components: {
     DashboardLayoutVue,
@@ -132,6 +175,30 @@ export default {
     const isDisabled = computed({
       get() {
         return selectedUsers.value.length == 0 ? true : false;
+      },
+    });
+
+    const filters = ref({
+      global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      first_name: {
+        operator: FilterOperator.AND,
+        constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
+      },
+      last_name: {
+        operator: FilterOperator.AND,
+        constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
+      },
+      email: {
+        operator: FilterOperator.AND,
+        constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
+      },
+      role: {
+        operator: FilterOperator.AND,
+        constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
+      },
+      direction: {
+        operator: FilterOperator.AND,
+        constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
       },
     });
 
@@ -192,6 +259,45 @@ export default {
       }
     );
 
+    function clearFilter() {
+      initFilters();
+    }
+
+    function initFilters() {
+      filters.value = {
+        global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        first_name: {
+          operator: FilterOperator.AND,
+          constraints: [
+            { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+          ],
+        },
+        last_name: {
+          operator: FilterOperator.AND,
+          constraints: [
+            { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+          ],
+        },
+        email: {
+          operator: FilterOperator.AND,
+          constraints: [
+            { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+          ],
+        },
+        role: {
+          operator: FilterOperator.AND,
+          constraints: [
+            { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+          ],
+        },
+        direction: {
+          operator: FilterOperator.AND,
+          constraints: [
+            { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+          ],
+        },
+      };
+    }
     return {
       selectedUsers,
       editingRows,
@@ -201,6 +307,8 @@ export default {
       addNewUser,
       destroyUsers,
       roles,
+      filters,
+      clearFilter,
     };
   },
   props: ["user_data", "users", "directions"],
