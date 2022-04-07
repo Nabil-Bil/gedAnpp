@@ -78,8 +78,9 @@ class UserController extends Controller
                 Rule::unique(User::class),
             ],
             'password' => ['required', 'string', new Password, 'confirmed'],
+            
             "direction" => ['required', 'exists:App\Models\Direction,id',],
-            "role" => ['required', Rule::in(['super admin', 'directeur', 'evaluateur'])]
+            "role" => ['required', Rule::in(['administrateur', 'directeur', 'evaluateur'])]
         ]);
 
         User::create([
@@ -117,7 +118,7 @@ class UserController extends Controller
                 Rule::unique(User::class)->ignore($id),
             ],
             "direction_id" => ['required', 'exists:App\Models\Direction,id',],
-            "role" => ['required', Rule::in(['super admin', 'directeur', 'evaluateur'])]
+            "role" => ['required', Rule::in(['administrateur', 'directeur', 'evaluateur'])]
         ]);
 
         User::find($id)->update([

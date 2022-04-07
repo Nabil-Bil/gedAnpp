@@ -25,6 +25,7 @@
         </div>
 
         <Dialog
+          style="width:500px"
           header="Add New Direction"
           v-model:visible="display"
           :modal="true"
@@ -44,9 +45,17 @@
                   name="name"
                   v-model="name"
                   class="py-2 px-3 shadow-sm mt-1 block w-full"
+                  :class="errors['name'] ? 'p-invalid' : ''"
+                  
                 />
+                
+                
                 <label for="name">Name</label>
               </span>
+              <small  v-if="errors['name']" class="p-error">{{
+                errors['name']
+              }}</small>
+              
             </div>
             <div class="mb-4">
               <span class="p-float-label p-input-icon-left w-full my-4">
@@ -57,9 +66,13 @@
                   name="service"
                   v-model="service"
                   class="py-2 px-3 shadow-sm mt-1 block w-full"
+                  :class="errors['service'] ? 'p-invalid' : ''"
                 />
-                <label for="name">Service</label>
+                <label for="service">Service</label>
               </span>
+               <small  v-if="errors['service']" class="p-error">{{
+                errors['service']
+              }}</small>
             </div>
           </form>
           <template v-slot:footer>
@@ -70,6 +83,7 @@
               class="p-button-success"
               type="submit"
               form="directionForm"
+              
             />
           </template>
         </Dialog>
@@ -164,7 +178,7 @@ export default {
   components: {
     DashboardLayoutVue,
   },
-  props: ["user_data", "directions"],
+  props: ["user_data", "directions","errors"],
   setup(props) {
     const editingRows = ref([]);
     const allDirections = ref(props.directions);
@@ -191,6 +205,8 @@ export default {
       },
     });
 
+
+
     function onRowEditSave(event) {
       let { newData, index } = event;
 
@@ -211,13 +227,16 @@ export default {
       }
     );
     function store() {
-      if (newDirection.name == "" || newDirection.service == "") {
-        return;
+      if(props.errors==''){
+        display.value = false;
+        return
       }
       Inertia.post("/dashboard/directions", newDirection);
       newDirection.name = "";
       newDirection.service = "";
-      display.value = false;
+        display.value = true;
+
+      
     }
 
     const destroyDirections = () => {

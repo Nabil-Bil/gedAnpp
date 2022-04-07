@@ -5,128 +5,131 @@
         Create New Pharmaceutical Establishment
       </h2>
       <div class="formgrid grid">
-        <div class="field col-12 md:col-6" v-for="input of inputs" :key="input.id">
-          <label :for="input.id">{{input.label}}</label>
-          <InputText :id="input.id" class="w-full" v-model="input.value" />
+        <div
+          class="field col-12 md:col-6"
+          v-for="input of inputs"
+          :key="input.id"
+        >
+          <label :for="input.id">{{ input.label }}</label>
+          <InputText
+            :id="input.id"
+            class="w-full"
+            v-model="input.value"
+            :class="errors[input.id] ? 'p-invalid' : ''"
+          />
+          <small :id="input.id + '-error'" class="p-error">{{
+            errors[input.id]
+          }}</small>
         </div>
-
-        <Button label="Register" type="submit" :disabled="isDisabled" />
+        <div class="flex justify-end w-full">
+          <Button label="Register" type="submit" />
+        </div>
       </div>
     </form>
   </DashboardLayoutVue>
 </template>
 
 <script>
-import { ref,computed } from "@vue/reactivity";
+import { ref } from "@vue/reactivity";
 import DashboardLayoutVue from "../../Layouts/DashboardLayout.vue";
-import { Inertia } from '@inertiajs/inertia';
+import { Inertia } from "@inertiajs/inertia";
 export default {
   components: {
     DashboardLayoutVue,
   },
-  setup() {
+  setup(props) {
     const inputs = ref([
       {
         id: "name",
         label: "Name",
-        value:'',
+        value: "",
+        errors: "",
       },
-       {
+      {
         id: "email",
         label: "Email",
-        value:'',
-
+        value: "",
+        errors: props.errors["email"],
       },
-       {
+      {
         id: "fixed",
         label: "Fix Number",
-        value:'',
-
+        value: "",
+        errors: "",
       },
-       {
+      {
         id: "mobile",
         label: "Mobile",
-        value:'',
+        value: "",
+        errors: "",
       },
       {
         id: "fax",
         label: "Fax",
-        value:'',
+        value: "",
+        errors: "",
       },
-       {
+      {
         id: "address",
         label: "Address",
-        value:'',
-
+        value: "",
+        errors: "",
       },
-       {
+      {
         id: "nature",
         label: "Nature",
-        value:'',
-
+        value: "",
+        errors: "",
       },
-       {
+      {
         id: "agreement",
         label: "Agreement",
-        value:'',
-
+        value: "",
+        errors: "",
       },
-       {
+      {
         id: "status",
         label: "Status",
-        value:'',
-
+        value: "",
+        errors: "",
       },
-       {
+      {
         id: "manager_name",
         label: "Manager Name",
-        value:'',
-
+        value: "",
+        errors: "",
       },
-       {
+      {
         id: "tech_manager_name",
         label: "Technical Manager Name",
-        value:'',
-
+        value: "",
+        errors: "",
       },
-       {
+      {
         id: "activity",
         label: "Activity",
-        value:'',
-
+        value: "",
+        errors: "",
       },
     ]);
-    const isDisabled = computed(() => {
-      var dis=false;
-      inputs.value.forEach(element => {
-        if(element.value==''){
-          dis=true
-        }
-        
-      });
-      return dis
-      
-    });
 
     function store() {
-        const data={}
-      inputs.value.forEach(element => {
-          const key=element.id;
-          const value=element.value;
-          data[key]=value
+      const data = {};
+      inputs.value.forEach((element) => {
+        const key = element.id;
+        const value = element.value;
+        data[key] = value;
       });
-        Inertia.post('/dashboard/pharmaceuticalEstablishment',data)
-
+      Inertia.post("/dashboard/pharmaceuticalEstablishment", data);
     }
 
     return {
-      isDisabled,
       store,
 
-      inputs
+      inputs,
     };
   },
-  props: ["user_data",'errors'],
+  props: ["user_data", "errors"],
 };
 </script>
 

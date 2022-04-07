@@ -326,7 +326,7 @@ export default {
       clearFilter,
     };
   },
-  props: ["user_data", "PharmaceuticalEstablishments"],
+  props: ["user_data", "PharmaceuticalEstablishments",'errors'],
 };
 </script>
 

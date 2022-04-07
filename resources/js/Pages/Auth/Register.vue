@@ -5,31 +5,59 @@
         <h2 class="pb-10 font-bold text-xl">Create New User</h2>
         <div class="formgrid grid">
           <div class="field col-12 md:col-6">
-            <label for="firstname">Firstname</label>
-            <InputText id="firstname" class="w-full" v-model="firstName" />
+            <label for="firstname" >Firstname</label>
+            <InputText
+              id="firstname"
+              class="w-full"
+              v-model="firstName"
+              :class="errors['firstName'] ? 'p-invalid' : ''"
+            />
+            <small v-if="errors['firstName']" class="p-error">{{
+              errors["firstName"]
+            }}</small>
           </div>
           <div class="field col-12 md:col-6">
             <label for="lastname">Lastname</label>
-            <InputText id="lastname" class="w-full" v-model="lastName" />
+            <InputText id="lastname" class="w-full" v-model="lastName" :class="errors['lastName'] ? 'p-invalid' : ''"/>
+            <small  v-if="errors['lastName']" class="p-error">{{
+              errors["lastName"]
+            }}</small>
           </div>
           <div class="field col-12 md:col-6">
             <label for="email">Email</label>
-            <InputText id="email" class="w-full" v-model="email" />
+            <InputText id="email" class="w-full" v-model="email" :class="errors['email'] ? 'p-invalid' : ''"/>
+            <small  v-if="errors['email']" class="p-error">{{
+              errors["email"]
+            }}</small>
           </div>
           <div class="field col-12 md:col-6">
-            <label for="lastname">Direction</label>
+            <label for="direction">Direction</label>
             <Dropdown
+              id="direction"
               v-model="direction"
               :options="directions"
               optionLabel="name"
               optionValue="id"
               placeholder="Select Direction"
               class="w-full"
+              :class="errors['direction'] ? 'p-invalid' : ''"
             />
+            <small v-if="errors['direction']" class="p-error">{{
+              errors["direction"]
+            }}</small>
           </div>
           <div class="field col-12 md:col-6">
             <label for="password">Password</label>
-            <InputText id="password" class="w-full" v-model="password" type="password" />
+            <InputText
+              id="password"
+              class="w-full"
+              v-model="password"
+              type="password"
+              :class="errors['password'] ? 'p-invalid' : ''"
+            />
+            <small  v-if="errors['password']" class="p-error">{{
+              errors["password"]
+            }}</small>
           </div>
           <div class="field col-12 md:col-6">
             <label for="passwordConfirmation">Confirm Password</label>
@@ -38,21 +66,28 @@
               class="w-full"
               v-model="password_confirmation"
               type="password"
+             
             />
+            
           </div>
           <div class="flex w-full justify-between items-center">
             <div class="field col-12 md:col-6">
-              <label for="lastname">Roles</label>
+              <label for="role">Roles</label>
               <Dropdown
+              id='role'
                 v-model="role"
                 :options="roles"
                 optionLabel="key"
                 optionValue="value"
                 placeholder="Select Role"
                 class="w-full"
+                :class="errors['role'] ? 'p-invalid' : ''"
               />
+              <small  v-if="errors['role']" class="p-error">{{
+                errors["role"]
+              }}</small>
             </div>
-            <Button label="Register" type="submit" :disabled="isDisabled"/>
+            <Button label="Register" type="submit" />
           </div>
         </div>
       </form>
@@ -63,7 +98,7 @@
 <script>
 import { reactive, toRefs, computed } from "@vue/reactivity";
 import DashboardLayoutVue from "../Layouts/DashboardLayout.vue";
-import { Inertia } from '@inertiajs/inertia';
+import { Inertia } from "@inertiajs/inertia";
 
 export default {
   setup() {
@@ -72,25 +107,12 @@ export default {
       lastName: "",
       email: "",
       password: "",
-      password_confirmation : "",
+      password_confirmation: "",
       direction: "",
       role: "",
     });
-    const isDisabled = computed(() => {
-      if (
-        data.firstName == "" ||
-        data.lastName == "" ||
-        data.email == "" ||
-        data.password == "" ||
-        data.password_confirmation  == "" ||
-        data.direction == "" ||
-        data.role == ""
-      ) {
-        return true
-      }
-      return false
-    });
-   const roles = [
+   
+    const roles = [
       {
         key: "Admin",
         value: "administrateur",
@@ -112,7 +134,7 @@ export default {
       register,
       ...toRefs(data),
       roles,
-      isDisabled
+   
     };
   },
   components: {
@@ -121,6 +143,7 @@ export default {
   props: {
     user_data: Object,
     directions: Array,
+    errors: Object,
   },
 };
 </script>
