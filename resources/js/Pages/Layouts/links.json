@@ -19,5 +19,10 @@
         "name": "Etablissement Pharmaceutique",
         "routeName": "pharmaceuticalEstablishment.index",
         "icon": "pi-building"
+      },
+      {
+        "name": "Compositions",
+        "routeName": "composition.index",
+        "icon": "pi-box"
       }
 ]

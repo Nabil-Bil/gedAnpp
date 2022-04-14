@@ -4,8 +4,12 @@ use App\Http\Controllers\AccessController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CompositionController;
 use App\Http\Controllers\DirectionController;
+use App\Http\Controllers\DosageController;
+use App\Http\Controllers\FormController;
 use App\Http\Controllers\PharmaceuticalEstablishmentController;
+use App\Http\Controllers\PresentationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +44,22 @@ Route::middleware('auth')->group(function () {
             Route::post("/pharmaceuticalEstablishment/destroy", [PharmaceuticalEstablishmentController::class, "destroy"]);
             Route::resource('/pharmaceuticalEstablishment', PharmaceuticalEstablishmentController::class, [
                 'only' => ['index', 'store', 'update', 'create']
+            ]);
+
+            Route::get("/composition",[CompositionController::class,"index"])->name('composition.index');
+            Route::post("/form/destroy", [FormController::class, "destroy"]);
+            Route::resource('/form', FormController::class, [
+                'only' => ['store', 'update']
+            ]);
+
+            Route::post("/dosage/destroy", [DosageController::class, "destroy"]);
+            Route::resource('/dosage', DosageController::class, [
+                'only' => ['store', 'update']
+            ]);
+
+            Route::post("/presentation/destroy", [PresentationController::class, "destroy"]);
+            Route::resource('/presentation', PresentationController::class, [
+                'only' => ['store', 'update',]
             ]);
         });
     });

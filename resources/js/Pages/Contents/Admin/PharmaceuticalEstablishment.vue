@@ -339,5 +339,6 @@ span.p-column-title {
 div.p-column-header-content {
   justify-content: center;
 }
+
 </style>
 

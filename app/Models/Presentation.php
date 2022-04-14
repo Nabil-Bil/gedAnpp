@@ -2,10 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Presentation extends Model
 {
     use HasFactory;
+    protected $guarded=[];
+    public function getCreatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->format('m/d/Y');
+    }
 }

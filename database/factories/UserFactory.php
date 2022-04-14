@@ -25,7 +25,7 @@ class UserFactory extends Factory
             'email' => $this->faker->unique()->safeEmail(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             "role"=>$roles[rand(0,2)],
-            'direction_id'=>rand(0,Direction::all()->count()),
+            'direction_id'=>rand(0,Direction::all()->count()-1),
         ];
     }
 

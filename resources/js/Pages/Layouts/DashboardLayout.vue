@@ -36,7 +36,13 @@
         "
       >
         <div class="flex items-center">
-          <Button @click="leftSideBarVisibility = true" class="p-button p-button-outlined p-button-rounded p-button-secondary" icon="pi pi-ellipsis-v"></Button>
+          <Button
+            @click="leftSideBarVisibility = true"
+            class="
+              p-button p-button-outlined p-button-rounded p-button-secondary
+            "
+            icon="pi pi-ellipsis-v"
+          ></Button>
           <slot name="Items">
             <div></div>
           </slot>
@@ -78,14 +84,12 @@
 <script>
 import { onMounted, ref } from "vue";
 import { Link } from "@inertiajs/inertia-vue3";
-import ProfileVue from "../Components/Profile.vue";
 import { Inertia } from "@inertiajs/inertia";
 import data from "./links.json";
 
 export default {
   components: {
     Link,
-    ProfileVue,
   },
 
   setup() {

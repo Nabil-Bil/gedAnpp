@@ -236,7 +236,7 @@ export default {
       newDirection.service = "";
         display.value = true;
 
-      
+
     }
 
     const destroyDirections = () => {
