@@ -11,19 +11,6 @@ class PresentationController extends Controller
 {
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return Inertia::render('Contents/Admin/CreatePharmaceuticalEstablishment.vue', [
-            'user_data' => $this->getUserData(),
-            
-        ]);
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -32,13 +19,12 @@ class PresentationController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            '*'=>'required',
-            'email'=>'required|email',
+            '*' => 'required',
         ]);
 
         Presentation::create($request->input());
 
-        return Redirect(route('pharmaceuticalEstablishment.index'));
+        return Redirect(route('medication.index'));
     }
 
     /**
@@ -50,15 +36,14 @@ class PresentationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
-    
+
         $request->validate([
-            '*'=>'required'
+            '*' => 'required'
         ]);
-        
+
         Presentation::find($id)->update($request->input());
 
-        return Redirect::route("composition.index");
+        return Redirect::route("medication.index");
     }
 
 
@@ -67,6 +52,6 @@ class PresentationController extends Controller
         foreach ($request->ids as $id) {
             Presentation::find($id)->delete();
         }
-        return Redirect::route('composition.index');
+        return Redirect::route('medication.index');
     }
 }

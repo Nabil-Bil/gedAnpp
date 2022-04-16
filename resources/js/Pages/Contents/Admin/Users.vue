@@ -130,7 +130,7 @@
                 v-model="data[field]"
                 :options="directions"
                 optionLabel="name"
-                optionValue="name"
+                placeholder="Select New Direction"
                 class="w-full"
               />
             </template>
@@ -221,13 +221,14 @@ export default {
       let { newData, index } = event;
      
       allUsers.value[index] = {
-        direction_id: newData.direction_id,
-        direction_name: newData.direction_name,
+        direction_id: newData.direction_name.id,
+        direction_name: newData.direction_name.name,
         email: newData.email,
         first_name: newData.first_name,
         last_name: newData.last_name,
         role: newData.role,
         id: newData.id,
+        created_at:newData.created_at
       };
 
       

@@ -3,11 +3,10 @@
 use App\Http\Controllers\AccessController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\CompositionController;
 use App\Http\Controllers\DirectionController;
 use App\Http\Controllers\DosageController;
 use App\Http\Controllers\FormController;
+use App\Http\Controllers\MedicationController;
 use App\Http\Controllers\PharmaceuticalEstablishmentController;
 use App\Http\Controllers\PresentationController;
 
@@ -46,7 +45,7 @@ Route::middleware('auth')->group(function () {
                 'only' => ['index', 'store', 'update', 'create']
             ]);
 
-            Route::get("/composition",[CompositionController::class,"index"])->name('composition.index');
+            Route::resource('medication', MedicationController::class,["only"=>['index', 'store', 'update', 'create']]);
             Route::post("/form/destroy", [FormController::class, "destroy"]);
             Route::resource('/form', FormController::class, [
                 'only' => ['store', 'update']

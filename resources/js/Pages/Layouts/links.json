@@ -21,8 +21,8 @@
         "icon": "pi-building"
       },
       {
-        "name": "Compositions",
-        "routeName": "composition.index",
+        "name": "Medications",
+        "routeName": "medication.index",
         "icon": "pi-box"
       }
 ]

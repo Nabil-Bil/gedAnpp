@@ -23,14 +23,15 @@ class UserController extends Controller
     {
         $allUsers = [];
         foreach (User::orderBy('created_at','DESC')->get()->except(Auth::user()->id) as $user) {
+           
             array_push($allUsers, [
                 "id" => $user->id,
                 "first_name" => $user->first_name,
                 'last_name' => $user->last_name,
                 "email" => $user->email,
                 "role" => $user->role,
-                "direction_id"=>$user->direction->id,
-                "direction_name"=>$user->direction->name,
+                "direction_id"=>$user->direction? $user->direction->id:0,
+                "direction_name"=>$user->direction? $user->direction->name:"Unknwon",
                 "created_at"=>$user->created_at
             ]);
         }
@@ -66,7 +67,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-
+        
         $request->validate([
             'firstName' => ['required', 'string', 'max:255'],
             'lastName' => ['required', 'string', 'max:255'],
@@ -82,7 +83,7 @@ class UserController extends Controller
             "direction" => ['required', 'exists:App\Models\Direction,id',],
             "role" => ['required', Rule::in(['administrateur', 'directeur', 'evaluateur'])]
         ]);
-
+        
         User::create([
             'first_name' => $request->firstName,
             'last_name' => $request->lastName,
@@ -106,7 +107,8 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
+    {   
+       
         $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
@@ -120,13 +122,14 @@ class UserController extends Controller
             "direction_id" => ['required', 'exists:App\Models\Direction,id',],
             "role" => ['required', Rule::in(['administrateur', 'directeur', 'evaluateur'])]
         ]);
-
+        
         User::find($id)->update([
             "direction_id"=>$request->direction_id,
             "first_name"=>$request->first_name,
             "last_name"=>$request->last_name,
             "email"=>$request->email,
             "role"=>$request->role,
+            
         ]);
 
         return Redirect::route("users.index");

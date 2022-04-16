@@ -25,7 +25,7 @@
         </div>
 
         <Dialog
-          style="width:500px"
+          style="width: 500px"
           header="Add New Direction"
           v-model:visible="display"
           :modal="true"
@@ -45,17 +45,10 @@
                   name="name"
                   v-model="name"
                   class="py-2 px-3 shadow-sm mt-1 block w-full"
-                  :class="errors['name'] ? 'p-invalid' : ''"
-                  
                 />
-                
-                
+
                 <label for="name">Name</label>
               </span>
-              <small  v-if="errors['name']" class="p-error">{{
-                errors['name']
-              }}</small>
-              
             </div>
             <div class="mb-4">
               <span class="p-float-label p-input-icon-left w-full my-4">
@@ -70,8 +63,8 @@
                 />
                 <label for="service">Service</label>
               </span>
-               <small  v-if="errors['service']" class="p-error">{{
-                errors['service']
+              <small v-if="errors['service']" class="p-error">{{
+                errors["service"]
               }}</small>
             </div>
           </form>
@@ -83,7 +76,7 @@
               class="p-button-success"
               type="submit"
               form="directionForm"
-              
+              :disabled="addButtonDisabled"
             />
           </template>
         </Dialog>
@@ -178,7 +171,7 @@ export default {
   components: {
     DashboardLayoutVue,
   },
-  props: ["user_data", "directions","errors"],
+  props: ["user_data", "directions", "errors"],
   setup(props) {
     const editingRows = ref([]);
     const allDirections = ref(props.directions);
@@ -205,7 +198,9 @@ export default {
       },
     });
 
-
+    const addButtonDisabled=computed(()=>{
+      return newDirection.name=='' || newDirection.service==''
+    })
 
     function onRowEditSave(event) {
       let { newData, index } = event;
@@ -227,16 +222,10 @@ export default {
       }
     );
     function store() {
-      if(props.errors==''){
-        display.value = false;
-        return
-      }
       Inertia.post("/dashboard/directions", newDirection);
       newDirection.name = "";
       newDirection.service = "";
-        display.value = true;
-
-
+      display.value = false;
     }
 
     const destroyDirections = () => {
@@ -285,6 +274,7 @@ export default {
       isDisabled,
       filters,
       clearFilter,
+      addButtonDisabled
     };
   },
 };
