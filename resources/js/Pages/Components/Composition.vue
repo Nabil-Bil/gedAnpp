@@ -39,6 +39,7 @@
       </template>
     </Dialog>
     <DataTable
+    stripedRows
       editMode="cell"
       @cell-edit-complete="onCellEditComplete"
       class="editable-cells-table"
@@ -61,6 +62,7 @@
                 label="Add"
                 class="p-button-success"
                 @click="display = true"
+                :disabled="!deleteDisabled"
               />
             </span>
             <span class="px-2">
@@ -70,6 +72,7 @@
                 label="Delete"
                 class="p-button-danger"
                 @click="destroyComposition"
+                :disabled="deleteDisabled"
               />
             </span>
             <span class="px-2">
@@ -99,6 +102,7 @@
         style="width: 5%; text-align: center; justify-content: center"
       ></Column>
       <Column
+      :sortable="true"
         header="Index"
         style="width: 30%; text-align: center"
         field="index"
@@ -145,9 +149,12 @@ export default {
       },
     });
     const display = ref(false);
-    const editingRows = ref();
+   
     const selectedComposition = ref([]);
     const value = ref("");
+    const deleteDisabled=computed(()=>{
+        return selectedComposition.value.length==0;
+    })
     const isDisabled=computed(()=>{
         return value.value==""
     })
@@ -200,24 +207,15 @@ export default {
       clearFilter,
       destroyComposition,
       onCellEditComplete,
-      editingRows,
       selectedComposition,
       display,
       store,
       value,
-      isDisabled
+      isDisabled,
+      deleteDisabled
     };
   },
   props: ["name", "destroyUrl", "url", "data", "errors"],
 };
 </script>
 
-<style>
-span.p-column-title {
-  width: 100%;
-}
-
-div.p-column-header-content {
-  justify-content: center;
-}
-</style>

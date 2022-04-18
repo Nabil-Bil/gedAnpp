@@ -16,9 +16,9 @@ class PharmaceuticalEstablishmentController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Contents/Admin/PharmaceuticalEstablishment.vue',[
-            'user_data'=>$this->getUserData(),
-            'PharmaceuticalEstablishments'=>PharmaceuticalEstablishment::orderBy('created_at','DESC')->get(),
+        return Inertia::render('Contents/Admin/PharmaceuticalEstablishment.vue', [
+            'user_data' => $this->getUserData(),
+            'PharmaceuticalEstablishments' => PharmaceuticalEstablishment::orderBy('created_at', 'DESC')->get(),
         ]);
     }
 
@@ -31,7 +31,7 @@ class PharmaceuticalEstablishmentController extends Controller
     {
         return Inertia::render('Contents/Admin/CreatePharmaceuticalEstablishment.vue', [
             'user_data' => $this->getUserData(),
-            
+
         ]);
     }
 
@@ -44,9 +44,9 @@ class PharmaceuticalEstablishmentController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            '*'=>'required',
-            'email'=>'required|email',
-        ]);
+            '*' => 'required',
+            'email' => 'required|email',
+        ], ['tech_manager_name.required' => 'The technical manager name is required','manager_name.required'=>"The manager name field is required"]);
 
         PharmaceuticalEstablishment::create($request->input());
 
@@ -63,13 +63,13 @@ class PharmaceuticalEstablishmentController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            '*'=>'required'
+            '*' => 'required'
         ]);
-        $data=$request->input();
+        $data = $request->input();
         unset($data['updated_at']);
         unset($data['created_at']);
         unset($data['id']);
-        
+
         PharmaceuticalEstablishment::find($id)->update($data);
 
         return Redirect::route("pharmaceuticalEstablishment.index");

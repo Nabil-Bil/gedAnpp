@@ -219,20 +219,22 @@ export default {
 
     function onRowEditSave(event) {
       let { newData, index } = event;
-     
+
       allUsers.value[index] = {
-        direction_id: newData.direction_name.id,
-        direction_name: newData.direction_name.name,
+        direction_id: newData.direction_name.id
+          ? newData.direction_name.id
+          : newData.direction_id,
+        direction_name: newData.direction_name.name
+          ? newData.direction_name.name
+          : newData.direction_name,
         email: newData.email,
         first_name: newData.first_name,
         last_name: newData.last_name,
         role: newData.role,
         id: newData.id,
-        created_at:newData.created_at
+        created_at: newData.created_at,
       };
 
-      
-      
       Inertia.put(
         "/dashboard/users/" + allUsers.value[index].id,
         allUsers.value[index]

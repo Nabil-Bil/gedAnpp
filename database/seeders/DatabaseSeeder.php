@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             PharmaceuticalEstablishementSeeder::class,
             CompositionSeeder::class,
+            MedicationSeeder::class,
         ]);
     }
 }

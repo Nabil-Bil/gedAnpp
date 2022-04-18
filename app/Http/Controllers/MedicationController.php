@@ -5,8 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Form;
 use Inertia\Inertia;
 use App\Models\Dosage;
+use App\Models\Medication;
 use App\Models\Presentation;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Redirect;
+use App\Models\PharmaceuticalEstablishment;
 
 class MedicationController extends Controller
 {
@@ -17,11 +21,39 @@ class MedicationController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Contents/Admin/Medication.vue',[
-            'user_data'=>$this->getUserData(),
-            'forms'=>Form::orderBy('created_at','DESC')->get(),
-            'dosages'=>Dosage::orderBy('created_at','DESC')->get(),
-            'presentations'=>Presentation::orderBy('created_at','DESC')->get(),
+        $allMedications = [];
+        foreach (Medication::orderBy('created_at', 'DESC')->get() as $medication) {
+           
+            array_push($allMedications, [
+                'code' => $medication->code,
+                'name' => $medication->name,
+                'type' => $medication->type,
+                'de_holder' => $medication->de_holder,
+                'conditioning' => $medication->conditioning,
+
+                'pharmaceutical_establishment_id' => $medication->pharmaceuticalEstablishment ? $medication->pharmaceuticalEstablishment->id : 0,
+                'pharmaceutical_establishment' => $medication->pharmaceuticalEstablishment ? $medication->pharmaceuticalEstablishment->name : "Unknwon",
+
+                'dosage_id' => $medication->dosage ? $medication->dosage->id : 0,
+                'dosage' => $medication->dosage ? $medication->dosage->value : "Unknwon",
+
+                'form_id' => $medication->form ? $medication->form->id : 0,
+                'form' => $medication->form ? $medication->form->value : "Unknwon",
+
+                'presentation_id' => $medication->presentation ? $medication->presentation->id : 0,
+                'presentation' => $medication->presentation ? $medication->presentation->value : "Unknwon",
+
+                "created_at" => $medication->created_at
+            ]);
+        }
+
+        return Inertia::render('Contents/Admin/Medication.vue', [
+            'user_data' => $this->getUserData(),
+            'forms' => Form::orderBy('created_at', 'DESC')->get(),
+            'dosages' => Dosage::orderBy('created_at', 'DESC')->get(),
+            'presentations' => Presentation::orderBy('created_at', 'DESC')->get(),
+            'pharmaceutical_establishments'=>PharmaceuticalEstablishment::orderBy('created_at', 'DESC')->get(),
+            'medications' => $allMedications
         ]);
     }
 
@@ -47,27 +79,9 @@ class MedicationController extends Controller
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+
+
 
     /**
      * Update the specified resource in storage.
@@ -76,19 +90,38 @@ class MedicationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
+    public function update(Request $request, $code)
+    {   
+        $request->validate([
+            '*'=>'required',
+            'code'=>Rule::unique('medications','code')->ignore($code,'code'),
+            'pharmaceutical_establishment_id'=>Rule::exists('pharmaceutical_establishments','id'),
+            'form_id'=>Rule::exists('forms','id'),
+            'dosage_id'=>Rule::exists('dosages','id'),
+            'presentation_id'=>Rule::exists('presentations','id'),
+        ]);
+        
+        Medication::find($code)->update([
+            'code'=>$request->code,
+            'name'=>$request->name,
+            'type'=>$request->type,
+            'conditioning'=>$request->conditioning,
+            'de_holder'=>$request->de_holder,
+            'pharmaceutical_establishment_id'=>$request->pharmaceutical_establishment_id,
+            'form_id'=>$request->form_id,
+            'presentation_id'=>$request->presentation_id,
+            'dosage_id'=>$request->dosage_id,
+        ]);
+
+        return Redirect::route('medication.index');
+
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        foreach($request->codes as $code){
+            Medication::find($code)->delete();
+        }
+        return Redirect::route('medication.index');
     }
 }

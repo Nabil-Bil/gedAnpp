@@ -44,8 +44,9 @@ Route::middleware('auth')->group(function () {
             Route::resource('/pharmaceuticalEstablishment', PharmaceuticalEstablishmentController::class, [
                 'only' => ['index', 'store', 'update', 'create']
             ]);
-
+            Route::post("/medication/destroy", [MedicationController::class, "destroy"]);
             Route::resource('medication', MedicationController::class,["only"=>['index', 'store', 'update', 'create']]);
+
             Route::post("/form/destroy", [FormController::class, "destroy"]);
             Route::resource('/form', FormController::class, [
                 'only' => ['store', 'update']

@@ -3,21 +3,46 @@
     <DashboardLayoutVue :UserData="user_data">
       <template #Items>
         <div class="px-10">
-          <Button @click="active = 0" class="p-button-text" label="Medications" />
+          <Button
+            @click="active = 0"
+            class="p-button-text"
+            label="Medications"
+          />
           <Button @click="active = 1" class="p-button-text" label="DCIS" />
           <Button @click="active = 2" class="p-button-text" label="Forms" />
           <Button @click="active = 3" class="p-button-text" label="Dosages" />
-          <Button @click="active = 4" class="p-button-text" label="Presentations"/>
+          <Button
+            @click="active = 4"
+            class="p-button-text"
+            label="Presentations"
+          />
         </div>
       </template>
       <TabView :activeIndex="active">
-        <TabPanel header="DCIS">
-          <div class="text-gray-300 font-bold text-9xl flex justify-center items-center" style="height : 80vh">
-            <p>Under Construction</p>
-          </div>
-        </TabPanel>
+        
         <TabPanel header="Medication">
-          <div class="text-gray-300 font-bold text-9xl flex justify-center items-center" style="height : 80vh">
+          <MedicationData
+            :dosages="dosages"
+            :errors="errors"
+            :forms="forms"
+            :medications="medications"
+            :pharmaceutical_establishments="pharmaceutical_establishments"
+            :presentations="presentations"
+          />
+          
+        </TabPanel>
+        <TabPanel header="DCIS">
+          <div
+            class="
+              text-gray-300
+              font-bold
+              text-9xl
+              flex
+              justify-center
+              items-center
+            "
+            style="height: 80vh"
+          >
             <p>Under Construction</p>
           </div>
         </TabPanel>
@@ -37,7 +62,6 @@
             name="Dosage"
             url="/dashboard/dosage"
             :errors="errors"
-
           />
         </TabPanel>
         <TabPanel header="Presentations">
@@ -47,7 +71,6 @@
             name="Presentation"
             url="/dashboard/presentation"
             :errors="errors"
-
           />
         </TabPanel>
       </TabView>
@@ -58,6 +81,7 @@
 <script>
 import DashboardLayoutVue from "../../Layouts/DashboardLayout.vue";
 import { ref } from "@vue/reactivity";
+import MedicationData from "../../Components/MedicationData.vue";
 
 import CompositionVue from "../../Components/Composition.vue";
 
@@ -65,8 +89,17 @@ export default {
   components: {
     DashboardLayoutVue,
     CompositionVue,
+    MedicationData,
   },
-  props: ["user_data", "forms", "dosages", "presentations","errors"],
+  props: [
+    "user_data",
+    "forms",
+    "dosages",
+    "presentations",
+    "medications",
+    "pharmaceutical_establishments",
+    "errors",
+  ],
   setup() {
     const active = ref(0);
 
@@ -77,7 +110,6 @@ export default {
 };
 </script>
 <style>
-
 .p-tabview-nav {
   display: none;
 }
@@ -86,5 +118,12 @@ export default {
   padding-top: 0px;
   padding-bottom: 0px;
   padding-right: 0px;
+}
+span.p-column-title {
+  width: 100%;
+}
+
+div.p-column-header-content {
+  justify-content: center;
 }
 </style>
