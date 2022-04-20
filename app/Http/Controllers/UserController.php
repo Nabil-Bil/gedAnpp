@@ -71,14 +71,15 @@ class UserController extends Controller
         $request->validate([
             '*' => 'required',
             'email' => [
+                'required',
                 'string',
                 'email',
                 'max:255',
                 Rule::unique(User::class),
             ],
-            'password' => ['string', new Password, 'confirmed'],
-            "direction" => ['exists:App\Models\Direction,id',],
-            "role" => [Rule::in(['administrateur', 'directeur', 'evaluateur'])]
+            'password' => ['required','string', new Password, 'confirmed',],
+            "direction" => ['required','exists:App\Models\Direction,id',],
+            "role" => ['required',Rule::in(['administrateur', 'directeur', 'evaluateur',])]
         ]);
 
         User::create([

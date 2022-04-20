@@ -23,7 +23,7 @@ class MedicationController extends Controller
     {
         $allMedications = [];
         foreach (Medication::orderBy('created_at', 'DESC')->get() as $medication) {
-           
+
             array_push($allMedications, [
                 'code' => $medication->code,
                 'name' => $medication->name,
@@ -52,7 +52,7 @@ class MedicationController extends Controller
             'forms' => Form::orderBy('created_at', 'DESC')->get(),
             'dosages' => Dosage::orderBy('created_at', 'DESC')->get(),
             'presentations' => Presentation::orderBy('created_at', 'DESC')->get(),
-            'pharmaceutical_establishments'=>PharmaceuticalEstablishment::orderBy('created_at', 'DESC')->get(),
+            'pharmaceutical_establishments' => PharmaceuticalEstablishment::orderBy('created_at', 'DESC')->get(),
             'medications' => $allMedications
         ]);
     }
@@ -65,7 +65,12 @@ class MedicationController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Contents/Admin/CreateMedication.vue', [
+            'user_data' => $this->getUserData(),  'forms' => Form::orderBy('created_at', 'DESC')->get(),
+            'dosages' => Dosage::orderBy('created_at', 'DESC')->get(),
+            'presentations' => Presentation::orderBy('created_at', 'DESC')->get(),
+            'pharmaceutical_establishments' => PharmaceuticalEstablishment::orderBy('created_at', 'DESC')->get(),
+        ]);
     }
 
     /**
@@ -76,7 +81,28 @@ class MedicationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            '*' => 'required',
+            'code' => ['required', Rule::unique('medications', 'code')],
+            'pharmaceutical_establishment' => [Rule::exists('pharmaceutical_establishments', 'id')],
+            'form' =>[ 'required',Rule::exists('forms', 'id')],
+            'dosage' => ['required',Rule::exists('dosages', 'id')],
+            'presentation' => ['required',Rule::exists('presentations', 'id')],
+        ], ['de_holder.required' => 'The DE holder field is required', 'pharmaceutical_establishment.required' => 'The pharmaceutical establishment field is required', 'pharmaceutical_establishment.exists' => 'The selected pharmaceutical establishment is invalid.']);
+
+        Medication::create([
+            'code'=>$request->code,
+            'name'=>$request->name,
+            'type'=>$request->type,
+            'de_holder'=>$request->de_holder,
+            'conditioning'=>$request->conditioning,
+            'form_id'=>$request->form,
+            'dosage_id'=>$request->dosage,
+            'pharmaceutical_establishment_id'=>$request->pharmaceutical_establishment,
+            'presentation_id'=>$request->presentation,
+
+        ]);
+        return Redirect::route('medication.index');
     }
 
 
@@ -91,35 +117,34 @@ class MedicationController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $code)
-    {   
+    {
         $request->validate([
-            '*'=>'required',
-            'code'=>Rule::unique('medications','code')->ignore($code,'code'),
-            'pharmaceutical_establishment_id'=>Rule::exists('pharmaceutical_establishments','id'),
-            'form_id'=>Rule::exists('forms','id'),
-            'dosage_id'=>Rule::exists('dosages','id'),
-            'presentation_id'=>Rule::exists('presentations','id'),
+            '*' => 'required',
+            'code' => Rule::unique('medications', 'code')->ignore($code, 'code'),
+            'pharmaceutical_establishment_id' => Rule::exists('pharmaceutical_establishments', 'id'),
+            'form_id' => Rule::exists('forms', 'id'),
+            'dosage_id' => Rule::exists('dosages', 'id'),
+            'presentation_id' => Rule::exists('presentations', 'id'),
         ]);
-        
+
         Medication::find($code)->update([
-            'code'=>$request->code,
-            'name'=>$request->name,
-            'type'=>$request->type,
-            'conditioning'=>$request->conditioning,
-            'de_holder'=>$request->de_holder,
-            'pharmaceutical_establishment_id'=>$request->pharmaceutical_establishment_id,
-            'form_id'=>$request->form_id,
-            'presentation_id'=>$request->presentation_id,
-            'dosage_id'=>$request->dosage_id,
+            'code' => $request->code,
+            'name' => $request->name,
+            'type' => $request->type,
+            'conditioning' => $request->conditioning,
+            'de_holder' => $request->de_holder,
+            'pharmaceutical_establishment_id' => $request->pharmaceutical_establishment_id,
+            'form_id' => $request->form_id,
+            'presentation_id' => $request->presentation_id,
+            'dosage_id' => $request->dosage_id,
         ]);
 
         return Redirect::route('medication.index');
-
     }
 
     public function destroy(Request $request)
     {
-        foreach($request->codes as $code){
+        foreach ($request->codes as $code) {
             Medication::find($code)->delete();
         }
         return Redirect::route('medication.index');
