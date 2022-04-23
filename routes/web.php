@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccessController;
+use App\Http\Controllers\DeviceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DirectionController;
@@ -60,6 +61,11 @@ Route::middleware('auth')->group(function () {
             Route::post("/presentation/destroy", [PresentationController::class, "destroy"]);
             Route::resource('/presentation', PresentationController::class, [
                 'only' => ['store', 'update',]
+            ]);
+
+            Route::post("/device/destroy", [DeviceController::class, "destroy"]);
+            Route::resource('device', DeviceController::class, [
+                'only' => ['store', 'update','index','create']
             ]);
         });
     });

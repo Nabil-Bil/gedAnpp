@@ -15,6 +15,17 @@
       filterDisplay="menu"
       v-model:editingRows="editingRows"
       @row-edit-save="onRowEditSave"
+      :globalFilterFields="[
+            'code',
+            'name',
+            'type',
+            'de_holder',
+            'conditioning',
+            'pharmaceutical_establishment',
+            'form',
+            'dosage',
+            'presentation',
+          ]"
     >
       <template #header>
         <div class="flex justify-between">
@@ -208,7 +219,7 @@
 import { Inertia } from "@inertiajs/inertia";
 import { FilterMatchMode, FilterOperator } from "primevue/api";
 import { ref } from "@vue/reactivity";
-import { computed, watch } from "@vue/runtime-core";
+import { computed } from "@vue/runtime-core";
 
 export default {
   setup(props) {
@@ -264,7 +275,6 @@ export default {
     }
     function onRowEditSave(event) {
       let { newData, index } = event;
-      console.log(props.medications[index]);
       
         let oldCode=props.medications[index].code;
       props.medications[index] = {

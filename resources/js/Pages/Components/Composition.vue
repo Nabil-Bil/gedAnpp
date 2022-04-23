@@ -51,6 +51,7 @@
       v-model:selection="selectedComposition"
       v-model:filters="filters"
       filterDisplay="menu"
+      :globalFilterFields="['value']"
     >
       <template #header>
         <div class="flex justify-between">

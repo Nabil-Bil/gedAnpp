@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('designation');
             $table->string('classification');
             $table->string('characteristic');
-            $table->integer('duration');
+            $table->string('duration');
             $table->timestamps();
         });
     }

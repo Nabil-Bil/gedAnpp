@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             PharmaceuticalEstablishementSeeder::class,
             CompositionSeeder::class,
             MedicationSeeder::class,
+            DeviceSeeder::class,
         ]);
     }
 }

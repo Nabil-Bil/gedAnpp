@@ -24,5 +24,10 @@
         "name": "Medications",
         "routeName": "medication.index",
         "icon": "pi-box"
+      },
+      {
+        "name": "Devices",
+        "routeName": "device.index",
+        "icon": "pi-box"
       }
 ]

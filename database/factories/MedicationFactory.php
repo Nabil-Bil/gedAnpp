@@ -24,7 +24,6 @@ class MedicationFactory extends Factory
             'code'=>$this->faker->unique()->word(),
             'name'=>$this->faker->word(),
             'type'=>$this->faker->word(),
-            'type'=>$this->faker->word(),
             'de_holder'=>$this->faker->words(3,true),
             'conditioning'=>$this->faker->word(),
             'pharmaceutical_establishment_id'=>rand(1,PharmaceuticalEstablishment::all()->count()),
