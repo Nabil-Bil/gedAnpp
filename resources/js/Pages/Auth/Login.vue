@@ -15,7 +15,7 @@
     >
       <div class="w-full sm:max-w-md p-5 mx-auto">
         <h2 class="mb-12 text-center text-5xl font-extrabold">Welcome.</h2>
-        <form @submit.prevent="login">
+        <form @submit.prevent="login" method="post">
           <div class="mb-4">
             <!-- <label class="block mb-1" for="email">Email-Address</label> -->
             <span class="p-float-label p-input-icon-left w-full my-4">
@@ -77,7 +77,7 @@
                 font-semibold
                 capitalize
               "
-              @click="login"
+              type="submit"
             >
               sign In
             </Button>
@@ -100,7 +100,7 @@ export default {
       remember_me: false,
     });
     const login = () => {
-      Inertia.post(route('login'), { ...data });
+      Inertia.post("/", { ...data });
     };
     return {
       ...toRefs(data),

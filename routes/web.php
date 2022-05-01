@@ -10,6 +10,7 @@ use App\Http\Controllers\FormController;
 use App\Http\Controllers\MedicationController;
 use App\Http\Controllers\PharmaceuticalEstablishmentController;
 use App\Http\Controllers\PresentationController;
+use App\Http\Controllers\TechnicalFileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +23,8 @@ use App\Http\Controllers\PresentationController;
 |
 */
 
-Route::inertia('/', 'Auth/Login');
+require_once __DIR__ . '/fortify.php';
+
 
 Route::middleware('auth')->group(function () {
     Route::prefix('dashboard')->group(function () {
@@ -67,6 +69,9 @@ Route::middleware('auth')->group(function () {
             Route::resource('device', DeviceController::class, [
                 'only' => ['store', 'update','index','create']
             ]);
+
+            Route::get('/technicalfile/create',[TechnicalFileController::class,'create']);
         });
     });
 });
+

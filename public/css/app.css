@@ -486,9 +486,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .w-5 {
   width: 1.25rem;
 }
-.w-10 {
-  width: 2.5rem;
-}
 .flex-1 {
   flex: 1 1 0%;
 }
