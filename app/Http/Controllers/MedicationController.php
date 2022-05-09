@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Dci;
 use App\Models\Form;
 use Inertia\Inertia;
 use App\Models\Dosage;
@@ -53,6 +54,7 @@ class MedicationController extends Controller
             'dosages' => Dosage::orderBy('created_at', 'DESC')->get(),
             'presentations' => Presentation::orderBy('created_at', 'DESC')->get(),
             'pharmaceutical_establishments' => PharmaceuticalEstablishment::orderBy('created_at', 'DESC')->get(),
+            'dcis' => Dci::orderBy('created_at', 'DESC')->get(),
             'medications' => $allMedications
         ]);
     }

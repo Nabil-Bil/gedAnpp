@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccessController;
+use App\Http\Controllers\DciController;
 use App\Http\Controllers\DeviceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\MedicationController;
 use App\Http\Controllers\PharmaceuticalEstablishmentController;
 use App\Http\Controllers\PresentationController;
 use App\Http\Controllers\TechnicalFileController;
+use App\Models\Dci;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,10 +67,18 @@ Route::middleware('auth')->group(function () {
                 'only' => ['store', 'update',]
             ]);
 
+            
+            Route::post("/dci/destroy", [DciController::class, "destroy"]);
+            Route::resource('/dci', DciController::class, [
+                'only' => ['store', 'update',]
+            ]);
+
+
             Route::post("/device/destroy", [DeviceController::class, "destroy"]);
             Route::resource('device', DeviceController::class, [
                 'only' => ['store', 'update','index','create']
             ]);
+            
 
             Route::get('/technicalfile/create',[TechnicalFileController::class,'create']);
         });

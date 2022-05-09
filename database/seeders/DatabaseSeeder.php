@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             CompositionSeeder::class,
             MedicationSeeder::class,
             DeviceSeeder::class,
+            DciSeeder::class
         ]);
     }
 }

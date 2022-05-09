@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('dcis', function (Blueprint $table) {
             $table->id();
-            $table->string("name");
+            $table->string("value");
             $table->timestamps();
         });
     }
