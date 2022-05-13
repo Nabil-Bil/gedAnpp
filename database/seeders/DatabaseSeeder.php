@@ -22,9 +22,11 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             PharmaceuticalEstablishementSeeder::class,
             CompositionSeeder::class,
+            DciSeeder::class,
             MedicationSeeder::class,
+            ClassificationSeeder::class,
+            DesignationSeeder::class,
             DeviceSeeder::class,
-            DciSeeder::class
         ]);
     }
 }

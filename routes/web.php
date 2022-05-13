@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\AccessController;
+use App\Http\Controllers\ClassificationController;
 use App\Http\Controllers\DciController;
+use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\DeviceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -70,6 +72,17 @@ Route::middleware('auth')->group(function () {
             
             Route::post("/dci/destroy", [DciController::class, "destroy"]);
             Route::resource('/dci', DciController::class, [
+                'only' => ['store', 'update',]
+            ]);
+
+            Route::post("/designation/destroy", [DesignationController::class, "destroy"]);
+            Route::resource('/designation', DesignationController::class, [
+                'only' => ['store', 'update',]
+            ]);
+            
+
+            Route::post("/classification/destroy", [ClassificationController::class, "destroy"]);
+            Route::resource('/classification', ClassificationController::class, [
                 'only' => ['store', 'update',]
             ]);
 

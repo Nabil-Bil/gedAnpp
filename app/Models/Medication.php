@@ -17,6 +17,12 @@ class Medication extends Model
         return Carbon::parse($value)->format('d/m/Y');
     }
 
+    public function getStatusAttribute($value)
+    {
+        return $value ?'Essential' : 'Not Essential';
+
+    }
+
     public function form(){
         return $this->belongsTo(Form::class);
     }
@@ -28,5 +34,10 @@ class Medication extends Model
     }
     public function pharmaceuticalEstablishment(){
         return $this->belongsTo(PharmaceuticalEstablishment::class);
+    }
+
+    public function dcis()
+    {
+        return $this->belongsToMany(Dci::class);
     }
 }

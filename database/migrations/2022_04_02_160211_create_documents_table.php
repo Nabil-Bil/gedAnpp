@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('path');
-            $table->foreignId('module_id')->constrained()->onDelete('cascade');
+            $table->integer("module number");
             $table->timestamps();
         });
     }

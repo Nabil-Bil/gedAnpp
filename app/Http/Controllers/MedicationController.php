@@ -31,7 +31,7 @@ class MedicationController extends Controller
                 'type' => $medication->type,
                 'de_holder' => $medication->de_holder,
                 'conditioning' => $medication->conditioning,
-
+                'status'=>$medication->status,
                 'pharmaceutical_establishment_id' => $medication->pharmaceuticalEstablishment ? $medication->pharmaceuticalEstablishment->id : 0,
                 'pharmaceutical_establishment' => $medication->pharmaceuticalEstablishment ? $medication->pharmaceuticalEstablishment->name : "Unknwon",
 
@@ -72,6 +72,8 @@ class MedicationController extends Controller
             'dosages' => Dosage::orderBy('created_at', 'DESC')->get(),
             'presentations' => Presentation::orderBy('created_at', 'DESC')->get(),
             'pharmaceutical_establishments' => PharmaceuticalEstablishment::orderBy('created_at', 'DESC')->get(),
+            'dcis' => Dci::orderBy('created_at', 'DESC')->get(),
+
         ]);
     }
 
@@ -83,16 +85,18 @@ class MedicationController extends Controller
      */
     public function store(Request $request)
     {
+        
         $request->validate([
             '*' => 'required',
             'code' => ['required', Rule::unique('medications', 'code')],
             'pharmaceutical_establishment' => [Rule::exists('pharmaceutical_establishments', 'id')],
             'form' =>[ 'required',Rule::exists('forms', 'id')],
             'dosage' => ['required',Rule::exists('dosages', 'id')],
-            'presentation' => ['required',Rule::exists('presentations', 'id')],
-        ], ['de_holder.required' => 'The DE holder field is required', 'pharmaceutical_establishment.required' => 'The pharmaceutical establishment field is required', 'pharmaceutical_establishment.exists' => 'The selected pharmaceutical establishment is invalid.']);
-
-        Medication::create([
+            'dci' => ['required',Rule::exists('dcis', 'id')],
+            'status'=>['required','boolean'],
+        ], ['dci.required' => 'The Actif Ingrediant field is required','de_holder.required' => 'The DE holder field is required', 'pharmaceutical_establishment.required' => 'The pharmaceutical establishment field is required', 'pharmaceutical_establishment.exists' => 'The selected pharmaceutical establishment is invalid.','dci.exists' => 'The selected Actif Ingredients are invalid.']);
+        
+        $medication=Medication::create([
             'code'=>$request->code,
             'name'=>$request->name,
             'type'=>$request->type,
@@ -102,8 +106,14 @@ class MedicationController extends Controller
             'dosage_id'=>$request->dosage,
             'pharmaceutical_establishment_id'=>$request->pharmaceutical_establishment,
             'presentation_id'=>$request->presentation,
-
+            'status'=>$request->status,
         ]);
+        foreach($request->input('dci') as $dci){
+            $medication->dcis()->attach($dci);
+        }   
+        
+        
+        
         return Redirect::route('medication.index');
     }
 
@@ -127,6 +137,7 @@ class MedicationController extends Controller
             'form_id' => Rule::exists('forms', 'id'),
             'dosage_id' => Rule::exists('dosages', 'id'),
             'presentation_id' => Rule::exists('presentations', 'id'),
+            'status' => 'required',Rule::in(['Essential','Not Essential'])
         ]);
 
         Medication::find($code)->update([
@@ -139,6 +150,7 @@ class MedicationController extends Controller
             'form_id' => $request->form_id,
             'presentation_id' => $request->presentation_id,
             'dosage_id' => $request->dosage_id,
+            'status' => $request->status=='Essential' ? 1:0
         ]);
 
         return Redirect::route('medication.index');

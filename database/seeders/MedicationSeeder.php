@@ -15,6 +15,12 @@ class MedicationSeeder extends Seeder
      */
     public function run()
     {
-        Medication::factory(100)->create();
+       $medications= Medication::factory(100)->create();
+
+       foreach($medications as $medication){
+            for($i=0;$i<rand(1,10);$i++){
+                $medication->dcis()->attach(rand(1,99));
+            }
+       }
     }
 }

@@ -16,7 +16,7 @@
         "icon": "pi-user"
       },
       {
-        "name": "Etablissement Pharmaceutique",
+        "name": "Pharmaceutical Establishment",
         "routeName": "pharmaceuticalEstablishment.index",
         "icon": "pi-building"
       },

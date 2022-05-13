@@ -17,8 +17,22 @@ class Device extends Model
     {
         return Carbon::parse($value)->format('d/m/Y');
     }
+    
+    public function getStatusAttribute($value)
+    {
+        return $value ?'Essential' : 'Not Essential';
+
+    }
 
     public function pharmaceuticalEstablishment(){
         return $this->belongsTo(PharmaceuticalEstablishment::class);
+    }
+
+    public function designation(){
+        return $this->belongsTo(Designation::class);
+    }
+
+    public function classification(){
+        return $this->belongsTo(Classification::class);
     }
 }

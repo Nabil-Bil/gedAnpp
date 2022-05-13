@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Classification;
+use App\Models\Designation;
 use App\Models\PharmaceuticalEstablishment;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -23,11 +25,9 @@ class DeviceFactory extends Factory
             'type'=>$this->faker->word(),
             'de_holder'=>$this->faker->words(3,true),
             'pharmaceutical_establishment_id'=>rand(1,PharmaceuticalEstablishment::all()->count()),
-            'designation'=>$this->faker->words(3,true),
-            'classification'=>$this->faker->word(),
-            'characteristic'=>$this->faker->words(3,true),
-            'duration'=>strval($this->faker->randomNumber()) ,
-            
+            'designation_id'=>rand(1,Designation::all()->count()),
+            'classification_id'=>rand(1,Classification::all()->count()),
+            'characteristic'=>$this->faker->words(3,true),            
         ];
     }
 }

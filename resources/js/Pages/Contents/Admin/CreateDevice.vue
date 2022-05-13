@@ -1,56 +1,40 @@
 <template>
   <DashboardLayoutVue :UserData="user_data">
     <form class="card p-24" @submit.prevent="store" method="POST">
-      <h2 class="pb-10 font-bold text-xl">Create New Medication</h2>
-      <div class="formgrid grid">
-        <div
-          class="field col-12 md:col-6"
-          v-for="input of inputs"
-          :key="input.id"
-        >
-          <label :for="input.id">{{ input.label }}</label>
+      <h2 class="pb-10 font-bold text-xl">Create New Device</h2>
+      <div class="formgrid grid items-center">
+        <div class="field col-12 md:col-6" v-for="input of inputs" :key="input.id">
           <div v-if="input.type == 'text'">
-            <InputText
-              :id="input.id"
-              class="w-full"
-              v-model="input.value"
-              :class="errors[input.id] ? 'p-invalid' : ''"
-            />
+            <label :for="input.id">{{ input.label }}</label>
+
+            <InputText :id="input.id" class="w-full" v-model="input.value"
+              :class="errors[input.id] ? 'p-invalid' : ''" />
           </div>
-          <div
-            v-else-if="
-              input.type == 'dropdown' &&
-              input.id != 'pharmaceutical_establishment'
-            "
-          >
-            <Dropdown
-              v-model="input.value"
-              :options="input.data"
-              optionLabel="value"
-              optionValue="id"
-              :placeholder="'Select New ' + input.label"
-              :filter="true"
-              :filterPlaceholder="'Find ' + input.label"
-              class="w-full"
-              :class="errors[input.id] ? 'p-invalid' : ''"
-            />
+          <div v-else-if="
+            input.type == 'dropdown' &&
+            input.id != 'pharmaceutical_establishment'
+          ">
+            <label :for="input.id">{{ input.label }}</label>
+            <Dropdown v-model="input.value" :options="input.data" optionLabel="value" optionValue="id"
+              :placeholder="'Select New ' + input.label" :filter="true" :filterPlaceholder="'Find ' + input.label"
+              class="w-full" :class="errors[input.id] ? 'p-invalid' : ''" />
           </div>
-          <div v-else>
-            <Dropdown
-              v-model="input.value"
-              :options="input.data"
-              optionLabel="name"
-              optionValue="id"
-              :placeholder="'Select New ' + input.label"
-              :filter="true"
-              :filterPlaceholder="'Find ' + input.label"
-              class="w-full"
-              :class="errors[input.id] ? 'p-invalid' : ''"
-            />
+          <div v-else-if="input.id == 'pharmaceutical_establishment'">
+            <label :for="input.id">{{ input.label }}</label>
+            <Dropdown v-model="input.value" :options="input.data" optionLabel="name" optionValue="id"
+              :placeholder="'Select New ' + input.label" :filter="true" :filterPlaceholder="'Find ' + input.label"
+              class="w-full" :class="errors[input.id] ? 'p-invalid' : ''" />
+          </div>
+          
+          <div v-else class="flex items-center">
+            <CheckBox v-model="input.value" :binary="true"></CheckBox>
+            <label :for="input.id" class="mx-4">{{ input.label }}</label>
+
           </div>
 
+
           <small :id="input.id + '-error'" class="p-error">{{
-            errors[input.id]
+              errors[input.id]
           }}</small>
         </div>
         <div class="flex justify-end w-full">
@@ -114,14 +98,16 @@ export default {
         label: "Designation",
         value: "",
         errors: "",
-        type: "text",
+        type: "dropdown",
+        data:props.designations
       },
       {
         id: "classification",
         label: "Classification",
         value: "",
         errors: "",
-        type: "text",
+        type: "dropdown",
+        data:props.classifications
       },
 
       {
@@ -132,11 +118,11 @@ export default {
         type: "text",
       },
       {
-        id: "duration",
-        label: "Duration",
-        value: "",
+        id: "status",
+        label: "Essential?",
+        value: false,
         errors: "",
-        type: "text",
+        type: "checkbox",
       },
     ]);
 
@@ -155,7 +141,7 @@ export default {
       inputs,
     };
   },
-  props: ["user_data", "errors", "pharmaceutical_establishments"],
+  props: ["user_data", "errors", "pharmaceutical_establishments",'designations','classifications'],
 };
 </script>
 

@@ -61,7 +61,7 @@
                 type="button"
                 icon="pi pi-plus"
                 label="Add"
-                class="p-button-success"
+                class="p-button-primary"
                 @click="display = true"
                 :disabled="!deleteDisabled"
               />

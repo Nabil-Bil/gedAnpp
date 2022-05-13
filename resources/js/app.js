@@ -25,6 +25,9 @@ import Splitter from 'primevue/splitter';
 import SplitterPanel from 'primevue/splitterpanel';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
+import MultiSelect from 'primevue/multiselect'
+import Checkbox from 'primevue/checkbox';
+import TextArea from 'primevue/textarea'
 
 
 
@@ -48,6 +51,9 @@ createInertiaApp({
       .component('SplitterPanel',SplitterPanel)
       .component('TabView',TabView)
       .component('TabPanel',TabPanel)
+      .component('MultiSelect',MultiSelect)
+      .component('Checkbox',Checkbox)
+      .component('TextArea',TextArea)
       .mount(el)
   },
 })

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Classification;
+use App\Models\Designation;
 use Inertia\Inertia;
 use App\Models\Device;
 use Illuminate\Http\Request;
@@ -30,16 +32,23 @@ class DeviceController extends Controller
                 "role" => $device->role,
                 "pharmaceutical_establishment_id" => $device->pharmaceuticalEstablishment ? $device->pharmaceuticalEstablishment->id : 0,
                 "pharmaceutical_establishment" => $device->pharmaceuticalEstablishment ? $device->pharmaceuticalEstablishment->name : "Unknown",
-                "designation"=>$device->designation,
-                "classification"=>$device->classification,
+
+                "designation_id"=> $device->designation ? $device->designation->id : 0,
+                "designation"=>$device->designation ? $device->designation->value : "Unknwon",
+
+                "classification_id"=>$device->classification ? $device->classification->id : 0,
+                "classification"=>$device->classification ? $device->classification->value : "Unknwon",
+
                 "characteristic"=>$device->characteristic,
-                "duration"=>$device->duration,
+                "status"=>$device->status,
                 "created_at" => $device->created_at
             ]);
         }
         return Inertia::render('Contents/Admin/Device', [
             'user_data' => $this->getUserData(),
             'devices' => $allDevices,
+            'designations'=>Designation::orderBy('created_at', 'DESC')->get(),
+            'classifications'=>Classification::orderBy('created_at', 'DESC')->get(),
             "pharmaceutical_establishments" => PharmaceuticalEstablishment::all(),
         ]);
     }
@@ -54,6 +63,8 @@ class DeviceController extends Controller
         return Inertia::render('Contents/Admin/CreateDevice',[
             'user_data' => $this->getUserData(),
             "pharmaceutical_establishments" => PharmaceuticalEstablishment::all(),
+            'designations'=>Designation::orderBy('created_at', 'DESC')->get(),
+            'classifications'=>Classification::orderBy('created_at', 'DESC')->get(),
             
         ]);
     }
@@ -70,6 +81,9 @@ class DeviceController extends Controller
             '*' => 'required',
             'code' => ['required',Rule::unique('devices', 'code')],
             'pharmaceutical_establishment' => ['required',Rule::exists('pharmaceutical_establishments', 'id')],
+            'designation' => ['required',Rule::exists('designations', 'id')],
+            'classification' => ['required',Rule::exists('classifications', 'id')],
+            'status'=>['required',Rule::in([true,false])]
         ],['de_holder.required' => 'The DE holder field is required', 'pharmaceutical_establishment.required' => 'The pharmaceutical establishment field is required', 'pharmaceutical_establishment.exists' => 'The selected pharmaceutical establishment is invalid.']);
 
 
@@ -79,10 +93,10 @@ class DeviceController extends Controller
             'type'=>$request->type,
             'de_holder'=>$request->de_holder,
             'pharmaceutical_establishment_id'=>$request->pharmaceutical_establishment,
-            'designation'=>$request->designation,
-            'classification'=>$request->classification,
+            'designation_id'=>$request->designation,
+            'classification_id'=>$request->classification,
             'characteristic'=>$request->characteristic,
-            'duration'=>$request->duration,
+            'status'=>$request->status,
 
         ]);
         return Redirect::route('device.index');
@@ -102,6 +116,8 @@ class DeviceController extends Controller
         $request->validate([
             '*' => 'required',
             'code' => Rule::unique('devices', 'code')->ignore($code, 'code'),
+            'designation_id' =>Rule::exists('designations', 'id'),
+            'classification_id' => Rule::exists('classifications', 'id'),
             'pharmaceutical_establishment_id' => Rule::exists('pharmaceutical_establishments', 'id'),
         ]);
 
@@ -110,11 +126,11 @@ class DeviceController extends Controller
             'name' => $request->name,
             'type' => $request->type,
             'de_holder' => $request->de_holder,
-            'designation' => $request->designation,
-            'classification'=>$request->classification,
+            'designation_id' => $request->designation_id,
+            'classification_id'=>$request->classification_id,
             'characteristic'=>$request->characteristic,
-            'duration'=>$request->duration,
             'pharmaceutical_establishment_id' => $request->pharmaceutical_establishment_id,
+            'status' => $request->status=='Essential' ? 1:0,
         ]);
 
         return Redirect::route('device.index');

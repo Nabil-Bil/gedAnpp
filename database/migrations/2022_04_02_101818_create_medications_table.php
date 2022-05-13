@@ -23,6 +23,7 @@ return new class extends Migration
             $table->foreignId('form_id')->nullable()->constrained()->onDelete('SET NULL');
             $table->foreignId('presentation_id')->nullable()->constrained()->onDelete('SET NULL');
             $table->foreignId('dosage_id')->nullable()->constrained()->onDelete('SET NULL');
+            $table->boolean('status')->default(false);
             $table->timestamps();
         });
     }
