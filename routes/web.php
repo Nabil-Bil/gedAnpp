@@ -91,9 +91,12 @@ Route::middleware('auth')->group(function () {
             Route::resource('device', DeviceController::class, [
                 'only' => ['store', 'update','index','create']
             ]);
-            
 
-            Route::get('/technicalfile/create',[TechnicalFileController::class,'create']);
+            Route::post("/technicalfile/destroy", [TechnicalFileController::class, "destroy"]);
+            Route::resource('technicalfile', TechnicalFileController::class, [
+                'only' => ['store', 'update','index','create']
+            ]);
+
         });
     });
 });

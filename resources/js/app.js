@@ -28,6 +28,7 @@ import TabPanel from 'primevue/tabpanel';
 import MultiSelect from 'primevue/multiselect'
 import Checkbox from 'primevue/checkbox';
 import TextArea from 'primevue/textarea'
+import TreeTable from 'primevue/treetable';
 
 
 
@@ -54,6 +55,7 @@ createInertiaApp({
       .component('MultiSelect',MultiSelect)
       .component('Checkbox',Checkbox)
       .component('TextArea',TextArea)
+      .component('TreeTable',TreeTable)
       .mount(el)
   },
 })

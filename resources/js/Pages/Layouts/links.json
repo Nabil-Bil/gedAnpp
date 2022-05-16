@@ -29,5 +29,10 @@
         "name": "Devices",
         "routeName": "device.index",
         "icon": "pi-box"
+      },
+      {
+        "name": "Technical Files",
+        "routeName": "technicalfile.index",
+        "icon": "pi-file"
       }
 ]

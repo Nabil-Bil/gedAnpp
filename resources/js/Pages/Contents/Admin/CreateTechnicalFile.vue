@@ -1,68 +1,72 @@
 <template>
   <DashboardLayoutVue :UserData="user_data">
     <form class="card p-24" @submit.prevent="store" method="POST">
-      <h2 class="pb-10 font-bold text-xl">Create New Medication</h2>
+      <h2 class="pb-10 font-bold text-xl">Create New Technical File</h2>
       <div class="formgrid grid">
-        <div
-          class="field col-12 md:col-6"
-          v-for="input of inputs"
-          :key="input.id"
-        >
-          <label :for="input.id">{{ input.label }}</label>
-          <div v-if="input.type == 'text'">
-            <InputText
-              :id="input.id"
-              class="w-full"
-              v-model="input.value"
-              :class="errors[input.id] ? 'p-invalid' : ''"
-            />
-          </div>
-          <div
-            v-else-if="
-              input.type == 'dropdown' &&
-              input.id != 'pharmaceutical_establishment'
-            "
-          >
-            <Dropdown
-              v-model="input.value"
-              :options="input.data"
-              optionLabel="value"
-              optionValue="id"
-              :placeholder="'Select New ' + input.label"
-              :filter="true"
-              :filterPlaceholder="'Find ' + input.label"
-              class="w-full"
-              :class="errors[input.id] ? 'p-invalid' : ''"
-            />
-          </div>
-          <div v-else>
-            <Dropdown
-              v-model="input.value"
-              :options="input.data"
-              optionLabel="name"
-              optionValue="id"
-              :placeholder="'Select New ' + input.label"
-              :filter="true"
-              :filterPlaceholder="'Find ' + input.label"
-              class="w-full"
-              :class="errors[input.id] ? 'p-invalid' : ''"
-            />
-          </div>
+        <div class="field col-12 md:col-6">
+          <label for="code">Code</label>
+          <InputText id="code" class="w-full" v-model="code" />
+        </div>
+        <div class="field col-12 md:col-6">
+          <label for="status">Status</label>
+          <InputText id="status" class="w-full" v-model="status" />
+        </div>
+        <div class="field col-12 md:col-6">
+          <label for="product_type">Product Type</label>
+          <Dropdown id="product_type" class="w-full" v-model="product_type" :options="product_types" optionLabel="label"
+            optionValue="value" @change="onTypeChange()" />
+        </div>
+        <template v-if="product_type != null" class="field col-12 md:col-6">
+          <template v-if="product_type == 'medication'">
+            <div class="field col-12 md:col-6">
+              <label for="medication">Medication</label>
+              <Dropdown id="medication" class="w-full mt-2" v-model="medicationData.medication" :options="medications"
+                @change="onMedicationChanges()" :filter="true" optionLabel="name" placeholder="Select a Medication"
+                filterPlaceholder="Find a Medication" />
+            </div>
 
-          <small :id="input.id + '-error'" class="p-error">{{
-            errors[input.id]
-          }}</small>
-        </div>
-        <div class="flex justify-end w-full">
-          <Button label="Register" type="submit" />
-        </div>
+            <template v-if="medicationData.medication != null">
+              <div class="field col-12 md:col-6">
+                <label for="presentation">Presentation</label>
+                <Dropdown id="presentation" class="w-full mt-2" v-model="medicationData.presentation"
+                  :options="medicationData.medication.presentations" :filter="true" optionLabel="value" optionValue="id"
+                  placeholder="Select a Presentation" filterPlaceholder="Find a Presentation" />
+              </div>
+              <div class="field col-12 md:col-6">
+                <label for="form">Form</label>
+                <Dropdown id="form" class="w-full mt-2" v-model="medicationData.form"
+                  :options="medicationData.medication.forms" :filter="true" optionLabel="value" optionValue="id"
+                  placeholder="Select a Form" filterPlaceholder="Find a Form" />
+              </div>
+              <div class="field col-12 md:col-6">
+                <label for="dosage">Dosage</label>
+                <Dropdown id="dosage" class="w-full mt-2" v-model="medicationData.dosage"
+                  :options="medicationData.medication.dosages" :filter="true" optionLabel="value" optionValue="id"
+                  placeholder="Select a Dosage" filterPlaceholder="Find a Dosage" />
+              </div>
+              <div class="field col-12 md:col-6">
+                <label for="dci">Actif Ingredient</label>
+                <Dropdown id="dci" class="w-full mt-2" v-model="medicationData.dci"
+                  :options="medicationData.medication.dcis" :filter="true" optionLabel="value" optionValue="id"
+                  placeholder="Select an Actif Ingredient" filterPlaceholder="Find an Actif Ingredient" />
+              </div>
+            </template>
+          </template>
+          <div v-if="product_type == 'device'">
+            <label for="device">Device</label>
+            <Dropdown id="device" class="w-full mt-2" v-model="device" :options="devices" :filter="true"
+              optionLabel="name" optionValue="name" placeholder="Select a Device" filterPlaceholder="Find a Device" />
+          </div>
+        </template>
+
+
       </div>
     </form>
   </DashboardLayoutVue>
 </template>
 
 <script>
-import { ref } from "@vue/reactivity";
+import { ref, reactive, toRefs } from "@vue/reactivity";
 import DashboardLayoutVue from "../../Layouts/DashboardLayout.vue";
 import { Inertia } from "@inertiajs/inertia";
 export default {
@@ -70,94 +74,69 @@ export default {
     DashboardLayoutVue,
   },
   setup(props) {
-    const inputs = ref([
+    const getInitialMedicationData = () => {
+      return {
+        medication: null,
+        dci: '',
+        presentation: '',
+        form: '',
+        dosage: '',
+      }
+    }
+    const inputs = reactive({
+      code: "",
+      status: "",
+      product_type: null,
+      medicationData: getInitialMedicationData(),
+      device: ''
+    }
+    );
+    const product_types = [
       {
-        id: "code",
-        label: "Code",
-        value: "",
-        errors: "",
-        type: "text",
+        label: 'None',
+        value: null,
       },
       {
-        id: "name",
-        label: "Name",
-        value: "",
-        errors: "",
-        type: "text",
-      },
+        label: 'Medication',
+        value: 'medication',
 
-      {
-        id: "type",
-        label: "Type",
-        value: "",
-        errors: "",
-        type: "text",
       },
       {
-        id: "de_holder",
-        label: "DE holder",
-        value: "",
-        errors: "",
-        type: "text",
-      },
+        label: 'Device',
+        value: 'device',
 
-      {
-        id: "pharmaceutical_establishment",
-        label: "Pharmaceutical Establishment",
-        value: "",
-        errors: "",
-        type: "dropdown",
-        data: props.pharmaceutical_establishments,
-      },
-      {
-        id: "designation",
-        label: "Designation",
-        value: "",
-        errors: "",
-        type: "text",
-      },
-      {
-        id: "classification",
-        label: "Classification",
-        value: "",
-        errors: "",
-        type: "text",
-      },
-
-      {
-        id: "characteristic",
-        label: "Characteristic",
-        value: "",
-        errors: "",
-        type: "text",
-      },
-      {
-        id: "duration",
-        label: "Duration",
-        value: "",
-        errors: "",
-        type: "text",
-      },
-    ]);
+      }
+    ]
 
     function store() {
-      const data = {};
-      inputs.value.forEach((element) => {
-        const key = element.id;
-        const value = element.value;
-        data[key] = value;
-      });
-      Inertia.post("/dashboard/device", data);
+    }
+
+    const onMedicationChanges = () => {
+      const newMedication = inputs.medicationData.medication;
+      inputs.medicationData = getInitialMedicationData()
+      inputs.medicationData.medication = newMedication
+    }
+
+    const onTypeChange = () => {
+      inputs.medicationData = getInitialMedicationData()
+      inputs.device = '';
+
     }
 
     return {
       store,
-      inputs,
+      ...toRefs(inputs),
+      product_types,
+      onMedicationChanges,
+      onTypeChange
+
     };
   },
-  props: ["user_data", "errors", "pharmaceutical_establishments"],
+  props: ["user_data", "errors", "devices", "medications"],
 };
 </script>
 
 <style scoped lang="css" src="primeflex/primeflex.css">
 </style>
+
+
