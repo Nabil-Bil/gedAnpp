@@ -32,12 +32,12 @@
                 </template>
                 <template #empty> No Technical File found. </template>
                 <template #loading> Loading Technical Files data. Please wait. </template>
-                <Column selectionMode="multiple" headerStyle="width: 3em;"></Column>
-                <Column field="code" header="Code" style="width: 20%; text-align: center"></Column>
-                <Column field="module_number" header="Module Number" style="width: 20%; text-align: center"></Column>
-                <Column field="product_type" header="Product Type" style="width: 20%; text-align: center"></Column>
-                <Column field="status" header="Status" style="width: 20%; text-align: center"></Column>
-                <Column field="created_at" header="Created At" style="width: 20%; text-align: center"></Column>
+                <Column selectionMode="multiple" headerStyle="width: 3em;" ></Column>
+                <Column field="code" header="Code" style="width: 20%; text-align: center"  :sortable="true"></Column>
+                <Column field="module_number" header="Module Number" style="width: 20%; text-align: center"  :sortable="true"></Column>
+                <Column field="product_type" header="Product Type" style="width: 20%; text-align: center"  :sortable="true"></Column>
+                <Column field="status" header="Status" style="width: 20%; text-align: center"  :sortable="true"></Column>
+                <Column field="created_at" header="Created At" style="width: 20%; text-align: center"  :sortable="true"></Column>
             </DataTable>
         </DashboardLayoutVue>
     </div>

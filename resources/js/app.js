@@ -28,7 +28,7 @@ import TabPanel from 'primevue/tabpanel';
 import MultiSelect from 'primevue/multiselect'
 import Checkbox from 'primevue/checkbox';
 import TextArea from 'primevue/textarea'
-import TreeTable from 'primevue/treetable';
+import ProgressBar from 'primevue/progressbar';
 
 
 
@@ -38,7 +38,6 @@ createInertiaApp({
     const app = createApp({ render: () => h(App, props) });
     app.use(plugin)
       .use(Primevue)
-
       .component('Sidebar', Sidebar)
       .component('Button', Button)
       .component('InputText', InputText)
@@ -55,7 +54,8 @@ createInertiaApp({
       .component('MultiSelect',MultiSelect)
       .component('Checkbox',Checkbox)
       .component('TextArea',TextArea)
-      .component('TreeTable',TreeTable)
+      .component('ProgressBar',ProgressBar)
+
       .mount(el)
   },
 })

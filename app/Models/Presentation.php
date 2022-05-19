@@ -12,6 +12,6 @@ class Presentation extends Model
     protected $guarded=[];
     public function getCreatedAtAttribute($value)
     {
-        return Carbon::parse($value)->format('m/d/Y');
+        return Carbon::parse($value)->format('d/m/Y');
     }
 }

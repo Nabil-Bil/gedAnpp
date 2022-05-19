@@ -113,7 +113,7 @@ class MedicationController extends Controller
         }   
         
         
-        
+
         return Redirect::route('medication.index');
     }
 
