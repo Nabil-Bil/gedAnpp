@@ -25,7 +25,7 @@ class FileSeeder extends Seeder
             Storage::disk('public')->put("technicalFiles/{$file['code']}/{$fileName}.pdf", $samplePdf);
             Document::factory()->create([
                 'module_number' => rand(1, 5),
-                'path' => 'test',
+                'path' => "technicalFiles/{$file['code']}/{$fileName}.pdf",
                 'technical_file_code' => $file['code']
             ]);
             }   

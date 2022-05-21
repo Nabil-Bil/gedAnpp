@@ -147,6 +147,7 @@ return [
         ],
     ],
 
+
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Attributes
@@ -158,6 +159,8 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'files.*.module'=>'filess',
+    ],
 
 ];

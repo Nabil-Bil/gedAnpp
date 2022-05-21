@@ -17,11 +17,11 @@ class TechnicalFileFactory extends Factory
      */
     public function definition()
     {
-        $code=$this->faker->words(3,true);
+        $code=$this->faker->word();
         return [
             'code' =>$code,
             'status'=>$this->faker->word(),
-            'medication_code'=>Medication::all()[rand(1,100)]['code'],
+            'medication_code'=>Medication::all()[rand(1,99)]['code'],
         ];
     }
 }

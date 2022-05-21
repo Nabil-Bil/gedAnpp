@@ -29,8 +29,8 @@ class TechnicalFileController extends Controller
         for ($j = 0; $j < count($array[$compositionType]); $j++) {
             $composition = $model::find($array[$compositionType][$j]);
             $array[$compositionType][$j] = [
-                'id' => $composition->id,
-                'value' => $composition->value
+                'id' => $composition->id??null,
+                'value' => $composition->value??null,
             ];
         }
     }
@@ -164,14 +164,28 @@ class TechnicalFileController extends Controller
             //Validation
             $newRequest->validate([
                 'code' => ['required', Rule::Unique('technical_files', 'code')],
-                'status' => ['required'],
+                'status' => ['required', Rule::in([
+                    "Réception",
+                    "Recevable",
+                    "Etude technico règlementaire",
+                    "Evaluation technique",
+                    "Contrôle Qualité",
+                    "Elaboration décision d’enregistrement",
+                    "DE remise",
+                ])],
                 'medication_name' => ['required', Rule::exists('medications', 'name')],
                 'dcis' => ['required', Rule::exists('dci_medication', 'dci_id')],
                 'form' => ['required', Rule::exists('medications', 'form_id')],
                 'presentation' => ['required', Rule::exists('medications', 'presentation_id')],
                 'dosage' => ['required', Rule::exists('medications', 'dosage_id')],
-                // 'files'=>['required','file','mimes:pdf'],
+                'files' => ['required', 'array', 'min:1', 'max:5'],
+                'files.*.file' => ['required', 'file', 'mimes:pdf'],
+                'files.*.module' => ['required', 'distinct'],
+            ], [   
+                'files.*.module.distinct' => "The files must not have same module number"
             ]);
+
+
             $medication = Medication::where([
                 ['name', $newRequest->medication_name],
                 ['form_id', $newRequest->form],
@@ -228,14 +242,25 @@ class TechnicalFileController extends Controller
             }
 
             $newRequest = new Request($data);
-
             $newRequest->validate([
                 'code' => ['required', Rule::Unique('technical_files', 'code')],
-                'status' => ['required'],
+                'status' => ['required', Rule::in([
+                    "Réception",
+                    "Recevable",
+                    "Etude technico règlementaire",
+                    "Evaluation technique",
+                    "Contrôle Qualité",
+                    "Elaboration décision d’homologation",
+                    "DH remise",
+                ])],
                 'device_name' => ['required', Rule::exists('devices', 'name')],
                 'designation' => ['required', Rule::exists('devices', 'designation_id')],
                 'classification' => ['required', Rule::exists('devices', 'classification_id')],
-                // 'files'=>['required','file','mimes:pdf'],
+                'files' => ['required', 'array', 'min:1', 'max:5'],
+                'files.*.file' => ['required', 'file', 'mimes:pdf'],
+                'files.*.module' => ['required', 'distinct'],
+            ], [
+                'files.*.module.distinct' => "The files must not have same module number"
             ]);
             $device = Device::where([
                 ['name', $newRequest->device_name],
@@ -245,6 +270,7 @@ class TechnicalFileController extends Controller
             if ($device->isEmpty()) {
                 return Redirect::back()->withErrors(['code' => 'Device not found']);
             }
+
 
 
             //Storing Data
@@ -268,6 +294,8 @@ class TechnicalFileController extends Controller
                 ]);
                 $document->save();
             }
+        } else {
+            return abort(409);
         }
 
 

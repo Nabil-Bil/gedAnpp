@@ -1,20 +1,22 @@
 <?php
 
-use App\Http\Controllers\AccessController;
-use App\Http\Controllers\ClassificationController;
-use App\Http\Controllers\DciController;
-use App\Http\Controllers\DesignationController;
-use App\Http\Controllers\DeviceController;
+use Inertia\Inertia;
+use App\Models\Document;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\DirectionController;
-use App\Http\Controllers\DosageController;
+use App\Http\Controllers\DciController;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\FormController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\AccessController;
+use App\Http\Controllers\DeviceController;
+use App\Http\Controllers\DosageController;
+use App\Http\Controllers\DirectionController;
 use App\Http\Controllers\MedicationController;
-use App\Http\Controllers\PharmaceuticalEstablishmentController;
+use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\PresentationController;
 use App\Http\Controllers\TechnicalFileController;
-use App\Models\Dci;
+use App\Http\Controllers\ClassificationController;
+use App\Http\Controllers\PharmaceuticalEstablishmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,7 +54,7 @@ Route::middleware('auth')->group(function () {
                 'only' => ['index', 'store', 'update', 'create']
             ]);
             Route::post("/medication/destroy", [MedicationController::class, "destroy"]);
-            Route::resource('medication', MedicationController::class,["only"=>['index', 'store', 'update', 'create']]);
+            Route::resource('medication', MedicationController::class, ["only" => ['index', 'store', 'update', 'create']]);
 
             Route::post("/form/destroy", [FormController::class, "destroy"]);
             Route::resource('/form', FormController::class, [
@@ -69,7 +71,7 @@ Route::middleware('auth')->group(function () {
                 'only' => ['store', 'update',]
             ]);
 
-            
+
             Route::post("/dci/destroy", [DciController::class, "destroy"]);
             Route::resource('/dci', DciController::class, [
                 'only' => ['store', 'update',]
@@ -79,7 +81,7 @@ Route::middleware('auth')->group(function () {
             Route::resource('/designation', DesignationController::class, [
                 'only' => ['store', 'update',]
             ]);
-            
+
 
             Route::post("/classification/destroy", [ClassificationController::class, "destroy"]);
             Route::resource('/classification', ClassificationController::class, [
@@ -89,15 +91,28 @@ Route::middleware('auth')->group(function () {
 
             Route::post("/device/destroy", [DeviceController::class, "destroy"]);
             Route::resource('device', DeviceController::class, [
-                'only' => ['store', 'update','index','create']
+                'only' => ['store', 'update', 'index', 'create']
             ]);
 
             Route::post("/technicalfile/destroy", [TechnicalFileController::class, "destroy"]);
             Route::resource('technicalfile', TechnicalFileController::class, [
-                'only' => ['store', 'update','index','create']
+                'only' => ['store', 'update', 'index', 'create']
             ]);
 
+            Route::get('/test', function () {
+                function countPages($path)
+                {
+                    $pdftext = Storage::disk('public')->get($path);
+                    $num = preg_match_all("/\/Page\W/", $pdftext, $dummy);
+                    return $num;
+                }
+                $file = Document::all('path')->last();
+                $pages=countPages($file->path);
+                return Inertia::render('Contents/Evaluateur', [
+                    'path' => asset(Storage::url($file->path)),
+                    'numberOfPages'=>$pages,
+                ]);
+            });
         });
     });
 });
-
