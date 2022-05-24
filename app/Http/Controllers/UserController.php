@@ -140,4 +140,13 @@ class UserController extends Controller
         }
         return Redirect::route('users.index');
     }
+
+    public function evaluateurs()
+    {
+
+       return Inertia::render('Contents/Evaluateurs',[
+           'userData' => $this->getUserData(),
+           'users'=>Auth::user()->direction->users
+       ]);
+    }
 }

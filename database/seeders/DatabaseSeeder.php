@@ -27,7 +27,8 @@ class DatabaseSeeder extends Seeder
             ClassificationSeeder::class,
             DesignationSeeder::class,
             DeviceSeeder::class,
-            FileSeeder::class
+            FileSeeder::class,
+            CommentarySeeder::class,
         ]);
     }
 }

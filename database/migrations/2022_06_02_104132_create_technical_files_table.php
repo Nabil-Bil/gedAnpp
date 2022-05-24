@@ -16,9 +16,8 @@ return new class extends Migration
         Schema::create('technical_files', function (Blueprint $table) {
             $table->string('code')->primary();
             $table->string('status');            
-            $table->string('medication_code')->nullable();
-            $table->foreign('medication_code')->on('medications')->references('code')->onDelete('SET NULL');
-            $table->foreignId('dci_id')->nullable()->constrained()->onDelete('SET NULL');
+            $table->unsignedBigInteger('dci_medication_id')->nullable();
+            $table->foreign('dci_medication_id')->on('dci_medication')->references('id')->onDelete('SET NULL');
             $table->string('device_code')->nullable();
             $table->foreign('device_code')->on('devices')->references('code')->onDelete('SET NULL');
             $table->timestamps();

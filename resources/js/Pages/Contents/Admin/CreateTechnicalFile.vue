@@ -5,8 +5,14 @@
       <div class="formgrid grid">
         <div class="field col-12 md:col-6">
           <label for="code">Code</label>
-          <InputText id="code" class="w-full" v-model="globalInputs.code" :class="errors.code?'p-invalid':''"/>
+          <InputText id="code" class="w-full" v-model="globalInputs.code" :class="errors.code ? 'p-invalid' : ''" />
           <small id="code" class="p-error" v-if="errors.code">{{ errors.code }}</small>
+        </div>
+        <div class="field col-12 md:col-6">
+          <label for="pharmaceutical_establishment">Pharmceutical Establishment</label>
+          <Dropdown id="pharmaceutical_establishment" class="w-full" v-model="globalInputs.pharmaceutical_establishment" :options="pharmaceuticalEstablishments"
+            optionLabel="name" optionValue="id" :class="errors.pharmaceutical_establishment ? 'p-invalid' : ''" placeholder="Select Pharmceutical Establishment" :filter="true"/>
+            <small id="code" class="p-error" v-if="errors.pharmaceutical_establishment">{{ errors.pharmaceutical_establishment }}</small>
         </div>
         <div class="field col-12 md:col-6">
           <label for="product_type">Product Type</label>
@@ -18,14 +24,14 @@
             <div class="field col-12 md:col-6">
               <label for="medication_status">Status</label>
               <Dropdown id="medication_status" class="w-full " v-model="globalInputs.status" placeholder="Select Status"
-                :options="medicationStatus" :class="errors.status?'p-invalid':''"/>
+                :options="medicationStatus" :class="errors.status ? 'p-invalid' : ''" />
               <small id="medication_status" class="p-error" v-if="errors.status">{{ errors.status }}</small>
             </div>
             <div class="field col-12 md:col-6">
               <label for="medication">Medication</label>
               <Dropdown id="medication" class="w-full" v-model="medicationData.medication" :options="medications"
                 @change="onMedicationChanges()" :filter="true" optionLabel="name" placeholder="Select a Medication"
-                filterPlaceholder="Find a Medication" :class="errors.medication_name?'p-invalid':''"/>
+                filterPlaceholder="Find a Medication" :class="errors.medication_name ? 'p-invalid' : ''" />
               <small id="medication" class="p-error" v-if="errors.medication_name">{{ errors.medication_name }}</small>
             </div>
 
@@ -34,28 +40,31 @@
                 <label for="presentation">Presentation</label>
                 <Dropdown id="presentation" class="w-full " v-model="medicationData.presentation"
                   :options="medicationData.medication.presentations" :filter="true" optionLabel="value" optionValue="id"
-                  placeholder="Select a Presentation" filterPlaceholder="Find a Presentation" :class="errors.presentation?'p-invalid':''"/>
+                  placeholder="Select a Presentation" filterPlaceholder="Find a Presentation"
+                  :class="errors.presentation ? 'p-invalid' : ''" />
                 <small id="presentation" class="p-error" v-if="errors.presentation">{{ errors.presentation }}</small>
               </div>
               <div class="field col-12 md:col-6">
                 <label for="form">Form</label>
                 <Dropdown id="form" class="w-full" v-model="medicationData.form"
                   :options="medicationData.medication.forms" :filter="true" optionLabel="value" optionValue="id"
-                  placeholder="Select a Form" filterPlaceholder="Find a Form" :class="errors.form?'p-invalid':''"/>
+                  placeholder="Select a Form" filterPlaceholder="Find a Form" :class="errors.form ? 'p-invalid' : ''" />
                 <small id="form" class="p-error" v-if="errors.form">{{ errors.form }}</small>
               </div>
               <div class="field col-12 md:col-6">
                 <label for="dosage">Dosage</label>
                 <Dropdown id="dosage" class="w-full" v-model="medicationData.dosage"
                   :options="medicationData.medication.dosages" :filter="true" optionLabel="value" optionValue="id"
-                  placeholder="Select a Dosage" filterPlaceholder="Find a Dosage" :class="errors.dosage?'p-invalid':''"/>
+                  placeholder="Select a Dosage" filterPlaceholder="Find a Dosage"
+                  :class="errors.dosage ? 'p-invalid' : ''" />
                 <small id="dosage" class="p-error" v-if="errors.dosage">{{ errors.dosage }}</small>
               </div>
               <div class="field col-12 md:col-6">
                 <label for="dci">Actif Ingredient</label>
                 <Dropdown id="dci" class="w-full " v-model="medicationData.dci"
                   :options="medicationData.medication.dcis" :filter="true" optionLabel="value" optionValue="id"
-                  placeholder="Select an Actif Ingredient" filterPlaceholder="Find an Actif Ingredient" :class="errors.dcis?'p-invalid':''"/>
+                  placeholder="Select an Actif Ingredient" filterPlaceholder="Find an Actif Ingredient"
+                  :class="errors.dcis ? 'p-invalid' : ''" />
                 <small id="dci" class="p-error" v-if="errors.dcis">{{ errors.dcis }}</small>
               </div>
             </template>
@@ -64,7 +73,7 @@
             <div class="field col-12 md:col-6">
               <label for="device_status">Status</label>
               <Dropdown id="device_status" class="w-full" v-model="globalInputs.status" :options="deviceStatus"
-                placeholder="Select Status" :class="errors.status?'p-invalid':''"/>
+                placeholder="Select Status" :class="errors.status ? 'p-invalid' : ''" />
               <small id="device_status" class="p-error" v-if="errors.status">{{ errors.status }}</small>
 
 
@@ -73,7 +82,7 @@
               <label for="device">Device</label>
               <Dropdown id="device" class="w-full" v-model="deviceData.device" :options="devices" :filter="true"
                 optionLabel="name" placeholder="Select a Device" filterPlaceholder="Find a Device"
-                @change="onDeviceChange()" :class="errors.device_name?'p-invalid':''"/>
+                @change="onDeviceChange()" :class="errors.device_name ? 'p-invalid' : ''" />
               <small id="device" class="p-error" v-if="errors.device_name">{{ errors.device_name }}</small>
 
             </div>
@@ -82,7 +91,8 @@
                 <label for="designation">Designation</label>
                 <Dropdown id="designation" class="w-full" v-model="deviceData.designation"
                   :options="deviceData.device.designations" :filter="true" optionLabel="value" optionValue="id"
-                  placeholder="Select a Designation" filterPlaceholder="Find a Designation" :class="errors.designation?'p-invalid':''"/>
+                  placeholder="Select a Designation" filterPlaceholder="Find a Designation"
+                  :class="errors.designation ? 'p-invalid' : ''" />
                 <small id="designation" class="p-error" v-if="errors.designation">{{ errors.designation }}</small>
 
               </div>
@@ -90,7 +100,8 @@
                 <label for="classification">Classification</label>
                 <Dropdown id="classification" class="w-full" v-model="deviceData.classification"
                   :options="deviceData.device.classifications" :filter="true" optionLabel="value" optionValue="id"
-                  placeholder="Select a Classification" filterPlaceholder="Find a Classification" :class="errors.classification?'p-invalid':''"/>
+                  placeholder="Select a Classification" filterPlaceholder="Find a Classification"
+                  :class="errors.classification ? 'p-invalid' : ''" />
                 <small id="classification" class="p-error" v-if="errors.classification">{{ errors.classification
                 }}</small>
 
@@ -100,13 +111,16 @@
           <template v-if="deviceData.device != null || medicationData.medication != null">
             <div class="field col-12">
               <div class="px-4">
-                <p for="multiple-upload " class="p-error" v-if="errors.files"><span class="font-bold text-2xl">.</span>{{errors.files}}</p>
-                <p for="multiple-upload " class="p-error" v-if="errors['files.0.module']"><span class="font-bold text-2xl">.</span>{{errors['files.0.module']}}</p>
+                <p for="multiple-upload " class="p-error" v-if="errors.files"><span
+                    class="font-bold text-2xl">.</span>{{ errors.files }}</p>
+                <p for="multiple-upload " class="p-error" v-if="errors['files.0.module']"><span
+                    class="font-bold text-2xl">.</span>{{ errors['files.0.module'] }}</p>
               </div>
 
               <div class="flex  w-full flex-col">
                 <div
-                  class="bg-gray-100 flex justify-between w-full h-min border-t  border-x border-gray-400 rounded-t-md py-3  px-5" :class="errors.files || errors['files.0.module']?'border-red-400':''">
+                  class="bg-gray-100 flex justify-between w-full h-min border-t  border-x border-gray-400 rounded-t-md py-3  px-5"
+                  :class="errors.files || errors['files.0.module'] ? 'border-red-400' : ''">
                   <label for="multiple-upload">
                     <input type="file" multiple accept="application/pdf" max="5" id="multiple-upload" name="files[]"
                       ref="filesInput" @input="onChange" class="hidden" />
@@ -114,8 +128,10 @@
                   </label>
                   <Button @click="clear" label="Cancel" icon="pi pi-times" />
                 </div>
-                <div class="border-gray-400 border-b rounded-b-md border-x border-t" :class="errors.files || errors['files.0.module']?'border-red-400':''">
-                  <template class="flex flex-col w-full border-y border-gray-400  rounded-b-md border-x " :class="errors.files || errors['files.0.module']?'border-red-400':''"
+                <div class="border-gray-400 border-b rounded-b-md border-x border-t"
+                  :class="errors.files || errors['files.0.module'] ? 'border-red-400' : ''">
+                  <template class="flex flex-col w-full border-y border-gray-400  rounded-b-md border-x "
+                    :class="errors.files || errors['files.0.module']?'border-red-400':''"
                     v-if="globalInputs.files != null" style="min-height:300px">
                     <div v-for="file in globalInputs.files" :key="file.id"
                       class="w-full flex border border-gray-300 justify-between px-4 py-6 items-center">
@@ -151,7 +167,7 @@ export default {
   },
   setup(props) {
 
-    
+
     const getInitialMedicationData = () => {
       return {
         medication: null,
@@ -174,6 +190,7 @@ export default {
     const globalInputs = ref({
       code: "",
       status: "",
+      pharmaceutical_establishment: "",
       product_type: null,
       files: null
     })
@@ -227,7 +244,7 @@ export default {
     const onTypeChange = () => {
       medicationData.value = getInitialMedicationData()
       deviceData.value = getInitialDeviceData();
-      globalInputs.value.status=""
+      globalInputs.value.status = ""
     }
 
     const onDeviceChange = () => {
@@ -292,7 +309,7 @@ export default {
     };
   },
 
-  props: ["user_data", "errors", "devices", "medications"],
+  props: ["user_data", "errors", "devices", "medications", "pharmaceuticalEstablishments"],
 };
 </script>
 

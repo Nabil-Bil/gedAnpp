@@ -17,6 +17,11 @@ return new class extends Migration
             $table->id();
             $table->string("name");
             $table->string("service");
+            $table->string("one")->default(false);
+            $table->string("two")->default(false);
+            $table->string("three")->default(false);
+            $table->string("four")->default(false);
+            $table->string("five")->default(false);
             $table->timestamps();
         });
     }

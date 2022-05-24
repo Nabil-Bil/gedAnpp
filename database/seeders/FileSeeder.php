@@ -17,7 +17,7 @@ class FileSeeder extends Seeder
      */
     public function run()
     {
-        $technicalFileNumber=10;
+        $technicalFileNumber=50;
         TechnicalFile::factory($technicalFileNumber)->create()->each(function ($file) {
             $samplePdf = Storage::disk('public')->get('sample.pdf');
             for($i=0;$i<rand(2,3);$i++){

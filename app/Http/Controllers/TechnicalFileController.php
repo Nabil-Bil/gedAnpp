@@ -14,6 +14,7 @@ use App\Models\Presentation;
 use Illuminate\Http\Request;
 use App\Models\TechnicalFile;
 use App\Models\Classification;
+use App\Models\PharmaceuticalEstablishment;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use function PHPUnit\Framework\isEmpty;
@@ -24,89 +25,6 @@ use Illuminate\Support\Facades\Redirect;
 
 class TechnicalFileController extends Controller
 {
-    private function analyseAndTransformData(&$array, $compositionType, Model $model)
-    {
-        for ($j = 0; $j < count($array[$compositionType]); $j++) {
-            $composition = $model::find($array[$compositionType][$j]);
-            $array[$compositionType][$j] = [
-                'id' => $composition->id??null,
-                'value' => $composition->value??null,
-            ];
-        }
-    }
-    private function getMedications()
-    {
-
-        $medications = Medication::select('name', DB::raw('GROUP_CONCAT(code) as codes',), DB::raw('GROUP_CONCAT(form_id) as forms',), DB::raw('GROUP_CONCAT(presentation_id) as presentations'), DB::raw('GROUP_CONCAT(dosage_id) as dosages'))->groupBy('name')
-            ->get();
-        $medications->map(function ($column) {
-            $column->codes = explode(',', $column->codes);
-            $column->forms = explode(',', $column->forms);
-            $column->presentations = explode(',', $column->presentations);
-            $column->dosages = explode(',', $column->dosages);
-        });
-
-        $medicationsArrays = [];
-        for ($i = 0; $i < count($medications); $i++) {
-            array_push($medicationsArrays, $medications[$i]->toArray());
-            $medicationsArrays[$i]['forms'] = array_values(array_unique($medicationsArrays[$i]['forms']));
-            $medicationsArrays[$i]['presentations'] = array_values(array_unique($medicationsArrays[$i]['presentations']));
-            $medicationsArrays[$i]['dosages'] = array_values(array_unique($medicationsArrays[$i]['dosages']));
-            $form = new Form();
-            $this->analyseAndTransformData($medicationsArrays[$i], 'forms', $form);
-
-            $presentation = new Presentation();
-            $this->analyseAndTransformData($medicationsArrays[$i], 'presentations', $presentation);
-
-            $dosage = new Dosage();
-            $this->analyseAndTransformData($medicationsArrays[$i], 'dosages', $dosage);
-        }
-        for ($i = 0; $i < count($medicationsArrays); $i++) {
-            $allDcis = [];
-            foreach ($medicationsArrays[$i]['codes'] as $code) {
-                $dcis = Medication::find($code)->dcis;
-                foreach ($dcis as $dci) {
-                    array_push(
-                        $allDcis,
-                        ["id" => $dci->id, "value" => $dci->value]
-                    );
-                }
-                $medicationsArrays[$i]['dcis'] = $allDcis;
-            }
-            $medicationsArrays[$i]["dcis"] = array_values(array_unique($medicationsArrays[$i]["dcis"], SORT_REGULAR));
-        }
-
-        return $medicationsArrays;
-    }
-
-
-
-    private function getDevices()
-    {
-        $devices = Device::select('name', DB::raw('GROUP_CONCAT(code) as codes',), DB::raw('GROUP_CONCAT(designation_id) as designations',), DB::raw('GROUP_CONCAT(classification_id) as classifications'))->groupBy('name')
-            ->get();
-
-        $devices->map(function ($column) {
-            $column->codes = explode(',', $column->codes);
-            $column->designations = explode(',', $column->designations);
-            $column->classifications = explode(',', $column->classifications);
-        });
-        $devicesArray = [];
-
-        for ($i = 0; $i < count($devices); $i++) {
-            array_push($devicesArray, $devices[$i]->toArray());
-            $devicesArray[$i]['designations'] = array_values(array_unique($devicesArray[$i]['designations']));
-            $devicesArray[$i]['classifications'] = array_values(array_unique($devicesArray[$i]['classifications']));
-            $designation = new Designation();
-            $this->analyseAndTransformData($devicesArray[$i], 'designations', $designation);
-
-            $classification = new Classification();
-            $this->analyseAndTransformData($devicesArray[$i], 'classifications', $classification);
-        }
-
-
-        return $devicesArray;
-    }
 
 
 
@@ -130,6 +48,117 @@ class TechnicalFileController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Request $request)
+    {
+        
+        $data = $request->query();
+        if (array_key_exists('product_type', $data) && array_key_exists('technicalFileData',$data)){
+            $inputData = [];
+            $inputData['product_type']=$data['product_type'];
+
+            //technical Files
+            $technicalFilesData=[];
+            foreach($data["technicalFileData"] as $k=>$v) {
+                if($v!=null){
+                    $technicalFilesData[$k]=$v;
+                }
+            }
+            if(!empty($technicalFilesData)){
+                $inputData["technicalFileData"]=$technicalFilesData;
+            }
+
+            $technicalFiles=TechnicalFile::all();
+            if(array_key_exists('technicalFileData',$inputData)){
+                foreach($inputData['technicalFileData'] as $key=>$value){
+                    $technicalFiles=$technicalFiles->where($key,$value);
+                }
+            }
+
+            if ($inputData['product_type'] == 'medication') {
+                $technicalFiles=$technicalFiles->whereNotNull('dci_medication_id');
+
+                $medicationData=[];
+                foreach($data['medicationData'] as $key=>$value) {
+                    if($value!=null){
+                        $medicationData[$key]=$v;
+                    }
+
+                }
+                if(!empty( $medicationData)){
+                    $inputData["medicationData"]=$medicationData;
+                }
+
+                if(array_key_exists('medicationData',$inputData)){
+                    $medications=Medication::all();
+                    foreach($inputData['medicationData'] as $key=>$value){
+                        $medications=$medications->where($key,$value);
+                    }
+                    $medicationsCode=[];
+                    foreach($medicationsCode as $medication){
+                        array_push($medicationsCode,$medication->code); 
+                    }
+                    $technicalFiles=$technicalFiles->whereIn("medication_code",$medicationsCode);
+                }
+
+
+
+            } else if ($inputData['product_type'] == 'device') {
+                $technicalFiles=$technicalFiles->whereNotNull('device_code');
+
+                $deviceData = [];
+                foreach($data["deviceData"] as $k=>$v) {
+                    if($v!=null){
+                        $deviceData[$k]=$v;
+                    }
+                }
+                if(!empty( $deviceData)){
+                    $inputData["deviceData"]=$deviceData;
+                }                
+                if(array_key_exists('deviceData',$inputData)){
+                    $devices=Device::all();
+                    foreach($inputData['deviceData'] as $key=>$value){
+                        $devices=$devices->where($key,$value);
+                    }
+                    $devicesCodes=[];
+                    foreach($devices as $device){
+                        array_push($devicesCodes,$device->code); 
+                    }
+                    $technicalFiles=$technicalFiles->whereIn("device_code",$devicesCodes);
+                }
+
+            }
+            else {
+                return abort(500);
+            }
+            $technicalFilesWithDocuments=[];
+            
+            if(!empty($technicalFiles->toArray())){
+                foreach($technicalFiles as $tf){
+                    array_push($technicalFilesWithDocuments,[
+                        'code'=>$tf->code,
+                        'status'=>$tf->status,
+                        'documents'=>$tf->documentsWithFilters->toArray()
+                   ]);
+                   
+                }
+            }
+            return Inertia::render('Contents/TechnicalFilesResult',[
+                'userData'=>$this->getUserData(),
+                'technicalFiles'=>$technicalFilesWithDocuments,
+            ]);
+        } 
+        else {
+            return abort(500);
+        }
+        
+
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -137,6 +166,7 @@ class TechnicalFileController extends Controller
      */
     public function store(Request $request)
     {
+
 
         if ($request->product_type == 'medication') {
 
@@ -147,7 +177,8 @@ class TechnicalFileController extends Controller
                 "dcis" => $request->dci,
                 "presentation" => $request->presentation,
                 "form" => $request->form,
-                "dosage" => $request->dosage
+                "dosage" => $request->dosage,
+                "pharmaceutical_establishment" => $request->pharmaceutical_establishment
             ];
 
             if (!empty($request->file())) {
@@ -164,6 +195,7 @@ class TechnicalFileController extends Controller
             //Validation
             $newRequest->validate([
                 'code' => ['required', Rule::Unique('technical_files', 'code')],
+                'pharmaceutical_establishment' => ['required', Rule::exists('medications', 'pharmaceutical_establishment_id')],
                 'status' => ['required', Rule::in([
                     "Réception",
                     "Recevable",
@@ -181,21 +213,22 @@ class TechnicalFileController extends Controller
                 'files' => ['required', 'array', 'min:1', 'max:5'],
                 'files.*.file' => ['required', 'file', 'mimes:pdf'],
                 'files.*.module' => ['required', 'distinct'],
-            ], [   
+            ], [
                 'files.*.module.distinct' => "The files must not have same module number"
             ]);
 
 
+
             $medication = Medication::where([
+                ['pharmaceutical_establishment_id', $newRequest->pharmaceutical_establishment],
                 ['name', $newRequest->medication_name],
                 ['form_id', $newRequest->form],
                 ['dosage_id', $newRequest->dosage],
                 ['presentation_id', $newRequest->presentation],
             ])->get();
             if ($medication->isEmpty()) {
-                return Redirect::back(303)->withErrors(['code' => 'Medication not found']);
+                return Redirect::back(303)->withErrors(['medication_name' => 'Medication not found for the selected data']);
             }
-
             if (!$medication[0]->dcis()->where('dci_id', $newRequest->dcis)->exists()) {
                 return Redirect::back()->withErrors(['code' => 'Dcis not found for the selected Medication']);
             }
@@ -205,10 +238,12 @@ class TechnicalFileController extends Controller
             //Storing Data
             $pathDirectory = 'technicalFiles/' . $newRequest->code;
             Storage::disk('public')->makeDirectory($pathDirectory);
+            $dci_medication = DB::table('dci_medication')->where('medication_code', $medication[0]->code)->where('dci_id', $newRequest->dcis)->get()[0]->id;
+
             $technicalFile = new TechnicalFile([
                 'code' => $newRequest->code,
                 'status' => $newRequest->status,
-                'medication_code' => $medication[0]->code,
+                'dci_medication_id' => $dci_medication
             ]);
 
             $technicalFile->save();
@@ -231,6 +266,7 @@ class TechnicalFileController extends Controller
                 "device_name" => $request->device,
                 "designation" => $request->designation,
                 "classification" => $request->classification,
+                "pharmaceutical_establishment" => $request->pharmaceutical_establishment
             ];
             if (!empty($request->file())) {
 
@@ -244,6 +280,7 @@ class TechnicalFileController extends Controller
             $newRequest = new Request($data);
             $newRequest->validate([
                 'code' => ['required', Rule::Unique('technical_files', 'code')],
+                'pharmaceutical_establishment' => ['required', Rule::exists('medications', 'pharmaceutical_establishment_id')],
                 'status' => ['required', Rule::in([
                     "Réception",
                     "Recevable",
@@ -263,12 +300,13 @@ class TechnicalFileController extends Controller
                 'files.*.module.distinct' => "The files must not have same module number"
             ]);
             $device = Device::where([
+                ['pharmaceutical_establishment_id', $newRequest->pharmaceutical_establishment],
                 ['name', $newRequest->device_name],
                 ['designation_id', $newRequest->designation],
                 ['classification_id', $newRequest->classification],
             ])->get();
             if ($device->isEmpty()) {
-                return Redirect::back()->withErrors(['code' => 'Device not found']);
+                return Redirect::back()->withErrors(['code' => 'Device not found for the selected data']);
             }
 
 
@@ -305,12 +343,14 @@ class TechnicalFileController extends Controller
     {
         $medications = $this->getMedications();
         $devices = $this->getDevices();
+        $pharmaceuticalEstablishments = PharmaceuticalEstablishment::all(['id', 'name']);
         return Inertia::render(
             'Contents/Admin/CreateTechnicalFile',
             [
                 'user_data' => $this->getUserData(),
                 'medications' => $medications,
                 'devices' => $devices,
+                'pharmaceuticalEstablishments' => $pharmaceuticalEstablishments
             ]
         );
     }

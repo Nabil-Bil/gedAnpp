@@ -19,6 +19,11 @@ class DirectionFactory extends Factory
         return [
             "name"=>$this->faker->company,
             "service"=>$this->faker->companySuffix(),
+            "one" =>rand(0,1),
+            "two" =>rand(0,1),
+            "three" =>rand(0,1),
+            "four" =>rand(0,1),
+            "five" =>rand(0,1),
             
         ];
     }

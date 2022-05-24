@@ -16,6 +16,8 @@ use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\PresentationController;
 use App\Http\Controllers\TechnicalFileController;
 use App\Http\Controllers\ClassificationController;
+use App\Http\Controllers\CommentaryController;
+use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\PharmaceuticalEstablishmentController;
 
 /*
@@ -98,21 +100,14 @@ Route::middleware('auth')->group(function () {
             Route::resource('technicalfile', TechnicalFileController::class, [
                 'only' => ['store', 'update', 'index', 'create']
             ]);
-
-            Route::get('/test', function () {
-                function countPages($path)
-                {
-                    $pdftext = Storage::disk('public')->get($path);
-                    $num = preg_match_all("/\/Page\W/", $pdftext, $dummy);
-                    return $num;
-                }
-                $file = Document::all('path')->last();
-                $pages=countPages($file->path);
-                return Inertia::render('Contents/Evaluateur', [
-                    'path' => asset(Storage::url($file->path)),
-                    'numberOfPages'=>$pages,
-                ]);
-            });
         });
+
+        Route::middleware(['evaluateur'])->group(function () {
+            Route::get("/technicalfiles", [TechnicalFileController::class, 'show']);
+            Route::get("/document/{id}", [DocumentController::class, 'show'])->where('id', '^[0-9]+$');
+            Route::post('/document/{id}/sendComment',[CommentaryController::class,'store'])->where('id', '^[0-9]+$');
+            Route::delete('/document/{id}/destroyComment/{commentId}',[CommentaryController::class,'destroy'])->where('id', '^[0-9]+$')->where('commentId','^[0-9]+$');
+        });
+        Route::middleware('directeur')->get('/evaluateurs',[UserController::class,'evaluateurs']);
     });
 });

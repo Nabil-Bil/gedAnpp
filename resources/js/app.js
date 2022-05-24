@@ -29,6 +29,8 @@ import MultiSelect from 'primevue/multiselect'
 import Checkbox from 'primevue/checkbox';
 import TextArea from 'primevue/textarea'
 import ProgressBar from 'primevue/progressbar';
+import Accordion from 'primevue/accordion';
+import AccordionTab from 'primevue/accordiontab';
 
 
 
@@ -55,6 +57,8 @@ createInertiaApp({
       .component('Checkbox',Checkbox)
       .component('TextArea',TextArea)
       .component('ProgressBar',ProgressBar)
+      .component('Accordion',Accordion)
+      .component('AccordionTab',AccordionTab)
 
       .mount(el)
   },
