@@ -35,8 +35,8 @@ class TechnicalFileController extends Controller
             array_push($allDocuments, [
                 'code' => $file->code,
                 'status' => $file->status,
-                'product_type' => $file->medication_code == null ? 'Device' : 'Medication',
-                'product' => $file->medication_code == null ? $file->device_code : $file->medication_code,
+                'product_type' => $file->dci_medication_id == null ? 'Device' : 'Medication',
+                'product' => $file->dci_medication_id == null ? $file->device_code : $file->dci_medication_id,
                 'module_number' => count($file->documents),
                 'created_at' => $file->created_at,
             ]);
@@ -54,108 +54,121 @@ class TechnicalFileController extends Controller
      */
     public function show(Request $request)
     {
-        
+
         $data = $request->query();
-        if (array_key_exists('product_type', $data) && array_key_exists('technicalFileData',$data)){
+        if (array_key_exists('product_type', $data) && array_key_exists('technicalFileData', $data)) {
             $inputData = [];
-            $inputData['product_type']=$data['product_type'];
+            $inputData['product_type'] = $data['product_type'];
 
             //technical Files
-            $technicalFilesData=[];
-            foreach($data["technicalFileData"] as $k=>$v) {
-                if($v!=null){
-                    $technicalFilesData[$k]=$v;
+            $technicalFilesData = [];
+            foreach ($data["technicalFileData"] as $k => $v) {
+                if ($v != null) {
+                    $technicalFilesData[$k] = $v;
                 }
             }
-            if(!empty($technicalFilesData)){
-                $inputData["technicalFileData"]=$technicalFilesData;
+            if (!empty($technicalFilesData)) {
+                $inputData["technicalFileData"] = $technicalFilesData;
             }
 
-            $technicalFiles=TechnicalFile::all();
-            if(array_key_exists('technicalFileData',$inputData)){
-                foreach($inputData['technicalFileData'] as $key=>$value){
-                    $technicalFiles=$technicalFiles->where($key,$value);
+            $technicalFiles = TechnicalFile::all();
+            if (array_key_exists('technicalFileData', $inputData)) {
+                foreach ($inputData['technicalFileData'] as $key => $value) {
+                    $technicalFiles = $technicalFiles->where($key, $value);
                 }
             }
 
             if ($inputData['product_type'] == 'medication') {
-                $technicalFiles=$technicalFiles->whereNotNull('dci_medication_id');
+                $technicalFiles = $technicalFiles->whereNotNull('dci_medication_id');
 
-                $medicationData=[];
-                foreach($data['medicationData'] as $key=>$value) {
-                    if($value!=null){
-                        $medicationData[$key]=$v;
+                $medicationData = [];
+                foreach ($data['medicationData'] as $key => $value) {
+                    if ($value != null) {
+                        $medicationData[$key] = $value;
                     }
-
                 }
-                if(!empty( $medicationData)){
-                    $inputData["medicationData"]=$medicationData;
-                }
-
-                if(array_key_exists('medicationData',$inputData)){
-                    $medications=Medication::all();
-                    foreach($inputData['medicationData'] as $key=>$value){
-                        $medications=$medications->where($key,$value);
-                    }
-                    $medicationsCode=[];
-                    foreach($medicationsCode as $medication){
-                        array_push($medicationsCode,$medication->code); 
-                    }
-                    $technicalFiles=$technicalFiles->whereIn("medication_code",$medicationsCode);
+                if (!empty($medicationData)) {
+                    $inputData["medicationData"] = $medicationData;
                 }
 
+                if (array_key_exists('medicationData', $inputData)) {
+                    $medications = Medication::all();
+                    foreach ($inputData['medicationData'] as $key => $value) {
+                        if ($key == 'dci_id') {
+                            continue;
+                        }
+                        $medications = $medications->where($key, $value);
+                    }
+                    $medicationsCode = [];
+                    foreach ($medications as $medication) {
+                        array_push($medicationsCode, $medication->code);
+                    }
 
+                    $dci_medication_ids = [];
+                    if (!array_key_exists('dci_id', $inputData['medicationData'])) {
+                        foreach ($medicationsCode as $medication) {
+                            $m = DB::table('dci_medication')->select('id')->where('medication_code', $medication)->get()->toArray();
 
+                            foreach ($m as $v) {
+
+                                array_push($dci_medication_ids, $v->id);
+                            }
+                        }
+                    } else {
+                        foreach ($medicationsCode as $medication) {
+                            $m = DB::table('dci_medication')->select('id')->where('medication_code', $medication)->where('dci_id', $inputData['medicationData']['dci_id'])->get()->toArray();
+
+                            foreach ($m as $v) {
+                                array_push($dci_medication_ids, $v->id);
+                            }
+                        }
+                    }
+                    $technicalFiles = $technicalFiles->whereIn("dci_medication_id", $dci_medication_ids);
+                }
             } else if ($inputData['product_type'] == 'device') {
-                $technicalFiles=$technicalFiles->whereNotNull('device_code');
+                $technicalFiles = $technicalFiles->whereNotNull('device_code');
 
                 $deviceData = [];
-                foreach($data["deviceData"] as $k=>$v) {
-                    if($v!=null){
-                        $deviceData[$k]=$v;
+                foreach ($data["deviceData"] as $k => $v) {
+                    if ($v != null) {
+                        $deviceData[$k] = $v;
                     }
                 }
-                if(!empty( $deviceData)){
-                    $inputData["deviceData"]=$deviceData;
-                }                
-                if(array_key_exists('deviceData',$inputData)){
-                    $devices=Device::all();
-                    foreach($inputData['deviceData'] as $key=>$value){
-                        $devices=$devices->where($key,$value);
-                    }
-                    $devicesCodes=[];
-                    foreach($devices as $device){
-                        array_push($devicesCodes,$device->code); 
-                    }
-                    $technicalFiles=$technicalFiles->whereIn("device_code",$devicesCodes);
+                if (!empty($deviceData)) {
+                    $inputData["deviceData"] = $deviceData;
                 }
-
-            }
-            else {
+                if (array_key_exists('deviceData', $inputData)) {
+                    $devices = Device::all();
+                    foreach ($inputData['deviceData'] as $key => $value) {
+                        $devices = $devices->where($key, $value);
+                    }
+                    $devicesCodes = [];
+                    foreach ($devices as $device) {
+                        array_push($devicesCodes, $device->code);
+                    }
+                    $technicalFiles = $technicalFiles->whereIn("device_code", $devicesCodes);
+                }
+            } else {
                 return abort(500);
             }
-            $technicalFilesWithDocuments=[];
-            
-            if(!empty($technicalFiles->toArray())){
-                foreach($technicalFiles as $tf){
-                    array_push($technicalFilesWithDocuments,[
-                        'code'=>$tf->code,
-                        'status'=>$tf->status,
-                        'documents'=>$tf->documentsWithFilters->toArray()
-                   ]);
-                   
+            $technicalFilesWithDocuments = [];
+
+            if (!empty($technicalFiles->toArray())) {
+                foreach ($technicalFiles as $tf) {
+                    array_push($technicalFilesWithDocuments, [
+                        'code' => $tf->code,
+                        'status' => $tf->status,
+                        'documents' => $tf->documentsWithFilters->toArray()
+                    ]);
                 }
             }
-            return Inertia::render('Contents/TechnicalFilesResult',[
-                'userData'=>$this->getUserData(),
-                'technicalFiles'=>$technicalFilesWithDocuments,
+            return Inertia::render('Contents/TechnicalFilesResult', [
+                'userData' => $this->getUserData(),
+                'technicalFiles' => $technicalFilesWithDocuments,
             ]);
-        } 
-        else {
+        } else {
             return abort(500);
         }
-        
-
     }
 
     /**

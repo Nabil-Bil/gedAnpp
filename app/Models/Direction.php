@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Direction extends Model
 {
     use HasFactory;
-    protected $fillable = ["name", "service"];
+    protected $guarded = [];
     public function getCreatedAtAttribute($value)
     {
         return Carbon::parse($value)->format('d/m/Y');
