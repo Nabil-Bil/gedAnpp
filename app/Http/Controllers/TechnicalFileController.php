@@ -3,22 +3,16 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-use App\Models\Form;
 use Inertia\Inertia;
 use App\Models\Device;
-use App\Models\Dosage;
 use App\Models\Document;
 use App\Models\Medication;
-use App\Models\Designation;
-use App\Models\Presentation;
 use Illuminate\Http\Request;
 use App\Models\TechnicalFile;
-use App\Models\Classification;
 use App\Models\PharmaceuticalEstablishment;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
-use function PHPUnit\Framework\isEmpty;
-use Illuminate\Database\Eloquent\Model;
+
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
@@ -165,6 +159,7 @@ class TechnicalFileController extends Controller
             return Inertia::render('Contents/TechnicalFilesResult', [
                 'userData' => $this->getUserData(),
                 'technicalFiles' => $technicalFilesWithDocuments,
+                'product_type'=>$inputData['product_type']
             ]);
         } else {
             return abort(500);
@@ -378,5 +373,18 @@ class TechnicalFileController extends Controller
             TechnicalFile::find($id)->delete();
         }
         return Redirect::route('technicalfile.index');
+    }
+
+    public function changeStatus($code,Request $request)
+    {
+        $technicalFile=TechnicalFile::find($code);
+        if($technicalFile==null){
+            return abort(404);
+        }
+
+        $technicalFile->update([
+            'status'=>$request->status
+        ]);
+        return Redirect::back();
     }
 }

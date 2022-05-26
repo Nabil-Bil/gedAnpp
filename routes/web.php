@@ -107,7 +107,11 @@ Route::middleware('auth')->group(function () {
             Route::get("/document/{id}", [DocumentController::class, 'show'])->where('id', '^[0-9]+$');
             Route::post('/document/{id}/sendComment',[CommentaryController::class,'store'])->where('id', '^[0-9]+$');
             Route::delete('/document/{id}/destroyComment/{commentId}',[CommentaryController::class,'destroy'])->where('id', '^[0-9]+$')->where('commentId','^[0-9]+$');
+            
         });
-        Route::middleware('directeur')->get('/evaluateurs',[UserController::class,'evaluateurs']);
+        Route::middleware('directeur')->group(function(){
+            Route::get('/evaluateurs',[UserController::class,'evaluateurs']);
+            Route::post('/technicalfiles/status/{code}',[TechnicalFileController::class,'changeStatus']);
+        });
     });
 });

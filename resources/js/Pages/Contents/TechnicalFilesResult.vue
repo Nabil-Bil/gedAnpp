@@ -12,21 +12,22 @@
                                 <h2>
                                     {{ tf.code }}
                                 </h2>
-                                <Dropdown @click.stop v-model="tfs[0].status" :modelValue="tfs[0].status" v-if="userData.role=='directeur'"></Dropdown>
+                                <Dropdown @click.stop @change="changeStatus($event,tf.code)" :options="product_type=='medication'?medicationStatus:deviceStatus"
+                                    v-if="userData.role == 'directeur'" v-model="tf.status"></Dropdown>
                                 <span v-else>Status : {{ tf.status }}</span>
                             </div>
                         </template>
                         <template v-if="tf.documents.length > 0">
-                                                <div class="flex w-full justify-between py-2 border bg-gray-100 px-2 my-2 cursor-pointer hover:bg-gray-200 items-center" @click="viewDocument(document.id)"
-                            v-for="document of tf.documents" :key="document.id">
-                            <h3 class="text-xl font-bold">{{ document.name }}</h3>
-                            <div class="text-lg flex flex-col items-center">
+                            <div class="flex w-full justify-between py-2 border bg-gray-100 px-2 my-2 cursor-pointer hover:bg-gray-200 items-center"
+                                @click="viewDocument(document.id)" v-for="document of tf.documents" :key="document.id">
+                                <h3 class="text-xl font-bold">{{ document.name }}</h3>
+                                <div class="text-lg flex flex-col items-center">
 
-                                <span>Module : {{ document.module_number }}</span>
-                                <div class="w-full h-[1px] bg-slate-400"></div>
-                                <span> Created At : {{ document.created_at }}</span>
+                                    <span>Module : {{ document.module_number }}</span>
+                                    <div class="w-full h-[1px] bg-slate-400"></div>
+                                    <span> Created At : {{ document.created_at }}</span>
+                                </div>
                             </div>
-                        </div>
                         </template>
                         <div v-else class="text-center font-bold text-xl">
                             No Document for you
@@ -48,6 +49,8 @@
 import { Inertia } from "@inertiajs/inertia";
 import UserLayoutVue from "../Layouts/UserLayout.vue";
 import { ref } from "vue";
+import  {medicationStatus,
+deviceStatus} from "../helpers/services"
 
 export default {
     components: {
@@ -58,18 +61,26 @@ export default {
         const back = () => {
             Inertia.get('/dashboard/');
         }
-        const viewDocument =(id)=>{
+        const viewDocument = (id) => {
 
             Inertia.get(`/dashboard/document/${id}`);
 
         }
+        const changeStatus=(e,code)=>{
+           
+            Inertia.post(`/dashboard/technicalfiles/status/${code}`,{status:e.value});
+        }
         return {
             tfs,
             back,
-            viewDocument
+            viewDocument,
+            medicationStatus,
+            deviceStatus,
+            changeStatus
+
         }
     },
-    props: ['userData', "technicalFiles"]
+    props: ['userData', "technicalFiles","product_type"]
 }
 </script>
 
