@@ -1,5 +1,5 @@
 <template>
-    <UserLayoutVue :userData="userData">
+    <UserLayoutVue :userData="userData" :errors="errors">
         <template #navbar v-if="userData.role == 'directeur'">
             <Button class="p-button-rounded border p-button-link " icon="pi pi-user"
                 @click="evaluateurs()"></Button>
@@ -221,7 +221,7 @@ export default {
         'dosages',
         'forms',
         'presentations',
-        'dcis'],
+        'dcis','errors'],
 };
 </script>
 

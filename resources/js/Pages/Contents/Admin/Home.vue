@@ -1,6 +1,6 @@
 <template>
   <div>
-    <DashboardLayoutVue :UserData="user_data">
+    <DashboardLayoutVue :UserData="user_data" :errors="errors">
       <div class="flex justify-around mt-36">
         <div>
           <Chart
@@ -34,6 +34,7 @@ export default {
   props: {
     user_data: Object,
     users_number: Array,
+    errors:Object
   },
   setup(props) {
     const labels=[];

@@ -1,6 +1,6 @@
 <template >
   <div class="pharmaClass">
-    <DashboardLayoutVue :UserData="user_data">
+    <DashboardLayoutVue :UserData="user_data" :errors="errors">
       <template #Items>
         <div class="px-2">
           <Button

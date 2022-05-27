@@ -11,7 +11,7 @@
       </div>
     </Sidebar>
     <div class="flex-1">
-      <NavBarVue :UserData="UserData">
+      <NavBarVue :UserData="UserData" :errors="errors">
         <div class="flex items-center">
           <Button @click="leftSideBarVisibility = true" class="
               p-button p-button-outlined p-button-rounded p-button-secondary
@@ -21,30 +21,6 @@
           </slot>
         </div>
       </NavBarVue>
-      <!-- <div
-          class="profile-picture rounded-full cursor-pointer"
-          @click="rightSideBarVisibility = true"
-          :style="{
-            backgroundImage: 'url(' + UserData.path_image + ')',
-          }"
-        ></div>
-        <Sidebar
-          v-model:visible="rightSideBarVisibility"
-          position="right"
-          class="p-sidebar-md"
-        >
-          <div class="flex flex-col justify-between" style="height: 90vh">
-            <div>
-              <h2>First Name : {{ UserData.first_name }}</h2>
-              <h2>Last Name : {{ UserData.last_name }}</h2>
-              <h2>Email : {{ UserData.email }}</h2>
-              <h2>Direction Name : {{ UserData.direction }}</h2>
-            </div>
-            <div>
-              <Button label="Logout" class="p-button-text" @click="logout" />
-            </div>
-          </div>
-        </Sidebar> -->
       <main>
         <slot />
       </main>
@@ -89,7 +65,7 @@ export default {
       currentRoute,
     };
   },
-  props: ["UserData"],
+  props: ["UserData","errors"],
 };
 </script>
 

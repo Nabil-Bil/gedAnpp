@@ -1,6 +1,6 @@
 <template>
   <div>
-    <DashboardLayoutVue :UserData="user_data">
+    <DashboardLayoutVue :UserData="user_data" :errors="errors">
       <template #Items>
         <div class="px-2">
           <Button :disabled="!isDisabled" label="Add" icon="pi pi-plus" iconPos="left"

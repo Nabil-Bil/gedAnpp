@@ -1,7 +1,7 @@
 <template>
     <div class="flex min-h-screen ">
         <div class="flex-1">
-            <NavBarVue :UserData="userData">
+            <NavBarVue :UserData="userData" :errors="errors">
                 <slot name="navbar"></slot>
                 <template #profilePicture>
                     <slot name="profilePicture"></slot>
@@ -26,6 +26,6 @@ export default {
     setup() {
 
     },
-    props: ['userData']
+    props: ['userData', "errors"]
 }
 </script>

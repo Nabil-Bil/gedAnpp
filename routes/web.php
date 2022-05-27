@@ -37,6 +37,8 @@ require_once __DIR__ . '/fortify.php';
 Route::middleware('auth')->group(function () {
     Route::prefix('dashboard')->group(function () {
         Route::get('/', [AccessController::class, 'index'])->name('dashboard.home');
+        Route::put('/user/editpassword',[UserController::class,'editPassword']);
+        Route::put('/user/profile',[UserController::class,'editProfileData']);
 
         Route::middleware(['admin'])->group(function () {
             Route::post("/directions/destroy", [DirectionController::class, "destroy"]);

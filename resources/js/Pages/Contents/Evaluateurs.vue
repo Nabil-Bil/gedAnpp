@@ -1,5 +1,5 @@
 <template>
-    <UserLayoutVue :userData="userData">
+    <UserLayoutVue :userData="userData" :errors="errors">
     <template #navbar>
         <Button class="p-button-rounded border p-button-link " icon="pi pi-arrow-left" @click="back()"></Button>
     </template>
@@ -170,7 +170,7 @@ export default {
             filters,
             clearFilter
         }
-    }, props: ['userData','users']
+    }, props: ['userData','users',"errors"]
 }
 </script>
 

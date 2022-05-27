@@ -1,5 +1,5 @@
 <template>
-  <DashboardLayoutVue :UserData="user_data">
+  <DashboardLayoutVue :UserData="user_data" :errors="errors">
     <form class="card p-24" @submit.prevent="store" method="POST">
       <h2 class="pb-10 font-bold text-xl">Create New Device</h2>
       <div class="formgrid grid items-center">

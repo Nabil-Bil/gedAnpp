@@ -1,5 +1,5 @@
 <template>
-    <UserLayoutVue :userData="userData">
+    <UserLayoutVue :userData="userData" :errors="errors">
         <template #navbar>
             <Button class="p-button-rounded p-button-link" icon="pi pi-home" @click="home()"></Button>
         </template>
@@ -112,7 +112,7 @@ export default {
 
 
     },
-    props: ['userData', 'document', 'numberOfPages', 'commentaries'],
+    props: ['userData', 'document', 'numberOfPages', 'commentaries',"errors"],
 
 }
 </script>

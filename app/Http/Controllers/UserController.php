@@ -11,6 +11,8 @@ use Laravel\Fortify\Rules\Password;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -149,4 +151,61 @@ class UserController extends Controller
            'users'=>Auth::user()->direction->users
        ]);
     }
+
+    public function editPassword(Request $request)
+    {   
+        $request->validate([
+            'current'=>['required','current_password'],
+            'new' => ['required','string', new Password, 'confirmed','different:current'],
+        ],[],['current'=>'Current Password','new'=>'New Password','new_confirmation'=>'New Password Confirmation']);
+
+        User::find(Auth::user()->id)->update([
+            'password'=>Hash::make($request->new)
+        ]);
+        return Redirect::back();
+       
+    }
+
+
+
+    public function editProfileData(Request $request)
+    {
+
+        $request->validate([
+            'firstName' => 'required',
+            'lastName' => 'required',
+            ]);
+
+       if($request->profilePictureFile!=null){
+           
+       $folderPath = "profilePictures/";   
+       $base64Image = explode(";base64,", $request->profilePictureFile);
+       $explodeImage = explode("image/", $base64Image[0]);
+       $imageType =$explodeImage[1];
+          
+
+       $image_base64 = base64_decode($base64Image[1]);
+       $file = $folderPath . uniqid() . '.'.$imageType;
+
+
+
+       Storage::disk('public')->put($file,$image_base64);
+       Auth::user()->update([
+        'first_name'=>$request->firstName,
+        'last_name'=>$request->lastName,
+        'path_image'=>$file
+    ]);
+       }else{
+        Auth::user()->update([
+            'first_name'=>$request->firstName,
+            'last_name'=>$request->lastName,
+        ]);
+       }
+
+
+       return Redirect::back();
+    }
+
+
+
 }

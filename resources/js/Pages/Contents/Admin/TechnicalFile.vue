@@ -1,6 +1,6 @@
 <template>
     <div>
-        <DashboardLayoutVue :UserData="user_data">
+        <DashboardLayoutVue :UserData="user_data" :errors="errors">
             <template #Items>
                 <div class="px-2">
                     <Button :disabled="!isDisabled" label="Add" icon="pi pi-plus" iconPos="left"
@@ -49,7 +49,7 @@ import { ref, computed } from 'vue';
 import { FilterMatchMode, FilterOperator } from "primevue/api";
 import { Inertia } from '@inertiajs/inertia';
 export default {
-    props: ['user_data', 'technical_files'],
+    props: ['user_data', 'technical_files',"errors"],
     components: {
         DashboardLayoutVue
     },

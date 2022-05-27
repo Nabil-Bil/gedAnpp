@@ -1,6 +1,6 @@
 <template>
   <div>
-    <DashboardLayoutVue :UserData="user_data">
+    <DashboardLayoutVue :UserData="user_data" :errors="errors">
       <template #Items>
         <div class="px-10">
           <Button @click="active = 0" class="p-button-text" label="Medications" />
