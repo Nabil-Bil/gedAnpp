@@ -36,7 +36,7 @@ class DocumentController extends Controller
 
         for($i=0;$i<count($commentaries);$i++){
             $user=User::find($commentaries[$i]['user_id'],['first_name','last_name','path_image','role',])->toArray();
-            $user['path_image']=asset(Storage::url($user['path_image']));
+            $user['path_image']=$user['path_image']==null?null:asset(Storage::url($user['path_image']));
             $commentaries[$i]['user']=$user;
         }
 

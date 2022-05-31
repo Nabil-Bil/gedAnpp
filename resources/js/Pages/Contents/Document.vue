@@ -32,7 +32,10 @@
                         :key="commentary.id">
                         <div class="flex justify-between items-center">
                             <div class="flex">
-                                <img class="w-10 h-10 mx-2" :src="commentary.user.path_image">
+                                <img class="w-10 h-10 mx-2" v-if="commentary.user.path_image != null"
+                                    :src="commentary.user.path_image">
+                                <div class="w-10 h-10 mx-2" v-else
+                                    v-html="svg(commentary.user.first_name, commentary.user.last_name)"></div>
                                 <div class="flex flex-col">
                                     <span class="font-bold text-md">{{ commentary.user.first_name }}
                                         {{ commentary.user.last_name }}</span>
@@ -77,6 +80,8 @@
 <script>
 import { Inertia } from "@inertiajs/inertia";
 import UserLayoutVue from "../Layouts/UserLayout.vue";
+import { createAvatar } from '@dicebear/avatars';
+import * as style from '@dicebear/avatars-initials-sprites';
 
 import VuePdfEmbed from 'vue-pdf-embed'
 import { ref, onMounted } from 'vue'
@@ -95,6 +100,14 @@ export default {
             navbar.classList.add('z-50')
 
         })
+        const svg = (first_name, last_name) => {
+
+            return createAvatar(style, {
+                seed: `${first_name}-${last_name}`,
+                radius: 9999,
+                backgroundColor: '#0d89ec' // ... and other options
+            });
+        }
 
         const zoom = () => {
             if (height.value.level < 7) {
@@ -105,7 +118,7 @@ export default {
         }
 
         const dezoom = () => {
-              if (height.value.level > 1) {
+            if (height.value.level > 1) {
                 height.value.height += -200
                 height.value.level -= 1
             }
@@ -134,7 +147,8 @@ export default {
             sendComment,
             destroy,
             zoom,
-            dezoom
+            dezoom,
+            svg
 
         }
     },
