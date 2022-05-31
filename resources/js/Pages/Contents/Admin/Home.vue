@@ -1,31 +1,32 @@
 <template>
-  <div>
-    <DashboardLayoutVue :UserData="user_data" :errors="errors">
-      <div class="flex justify-around mt-36">
-        <div>
-          <Chart
-            type="doughnut"
-            :data="chartData"
-            class="p-chart"
-          ></Chart>
+  <DashboardLayoutVue :UserData="user_data" :errors="errors" >
+    <div class="flex flex-col justify-around mt-5 px-10 ">
+      <div class="
+       px-10 p-2 card rounded-lg w-full bg-white ">
+        <Chart type="line" :options="fileDataOptions" :data='fileData' :height="300" :width="width" />
+      </div>
+      <div class="flex my-4 flex-wrap justify-between">
+        <div class="
+            px-10 p-2  card rounded-lg w-max bg-white ">
+          <Chart type="doughnut" :data='usersData' :height="300" :options="{ responsive: false }"
+            :width="width / 3.5" />
         </div>
-        <div>
-          <Chart
-            type="pie"
-            :data="chartData"
-
-            class="p-chart"
-          ></Chart>
+        <div class="
+            px-10 p-2  card rounded-lg w-max bg-white  ">
+          <Chart type="bar" :data='productData' :height="300" :options="{ responsive: false }" :width="width / 3.5" />
+        </div>
+        <div class="
+            px-10 p-2  card rounded-lg w-max bg-white  ">
+          <Chart type="line" :options="fileDataOptions" :data='productData' :height="300" :width="width/3.5" />
         </div>
       </div>
-      <div class=" flex justify-center items-center"><Chart type="radar" :data="radar_data" :height="600" :width="600"></Chart></div>
-      
-    </DashboardLayoutVue>
-  </div>
+    </div>
+  </DashboardLayoutVue>
 </template>
 
 <script>
 import { ref } from "@vue/reactivity";
+import { onMounted, onUnmounted } from "vue";
 import DashboardLayoutVue from "../../Layouts/DashboardLayout.vue";
 export default {
   components: {
@@ -33,57 +34,110 @@ export default {
   },
   props: {
     user_data: Object,
+    files: Array,
+    errors: Object,
     users_number: Array,
-    errors:Object
+    medications: Array,
+    devices:Array,
   },
   setup(props) {
-    const labels=[];
-    const data=[];
-    props.users_number.forEach(element => {
-      labels.push(element.role);
-      data.push(element.number);
-    });
-    const chartData = ref({
-      labels: labels,
+    const width = ref(window.innerWidth - 200);
+    const fileData = ref(
+      {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        datasets: [
+          {
+            label: 'Technical Files',
+            data: props.files,
+            fill: true,
+            borderColor: '#42A5F5',
+            tension: .4
+          },
+
+        ]
+      }
+    );
+    let users_number = []
+    props.users_number.map((value) => {
+      users_number.push(value.number)
+    })
+    const usersData = ref({
+      labels: ['Administrateur', 'Directeur', 'Evaluateur'],
       datasets: [
         {
-          data:data,
-          backgroundColor: ["#42A5F5", "#66BB6A", "#FFA726"],
-          hoverBackgroundColor: ["#64B5F6", "#81C784", "#FFB74D"],
+          data: users_number,
+          backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
+          hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"]
+        }
+      ]
+    })
+    const productData = ({
+      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+      datasets: [
+        {
+          label: 'Medication',
+          data: props.medications,
+          backgroundColor: '#42A5F5',
+        },
+         {
+          label: 'Device',
+          backgroundColor: '#FFA726',
+          data: props.devices,
+
         },
       ],
-    });
 
+    })
 
-    const radar_data=ref({
-                labels: ['Eating', 'Drinking', 'Sleeping', 'Designing', 'Coding', 'Cycling', 'Running'],
-                datasets: [
-                    {
-                        label: 'My First dataset',
-                        backgroundColor: 'rgba(179,181,198,0.2)',
-                        borderColor: 'rgba(179,181,198,1)',
-                        pointBackgroundColor: 'rgba(179,181,198,1)',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: 'rgba(179,181,198,1)',
-                        data: [65, 59, 90, 81, 56, 55, 40]
-                    },
-                    {
-                        label: 'My Second dataset',
-                        backgroundColor: 'rgba(255,99,132,0.2)',
-                        borderColor: 'rgba(255,99,132,1)',
-                        pointBackgroundColor: 'rgba(255,99,132,1)',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: 'rgba(255,99,132,1)',
-                        data: [28, 48, 40, 19, 96, 27, 100]
-                    }
-                ]
-            },)
+    onMounted(() => {
+      window.document.body.classList.add('bg-gray-100')
+    })
+
+    onUnmounted(() => {
+      window.document.body.classList.remove('bg-gray-100')
+
+    })
+
+    const fileDataOptions = ref(
+      {
+        responsive: false,
+        plugins: {
+          legend: {
+            labels: {
+              color: '#495057'
+            }
+          },
+
+        },
+        scales: {
+          x: {
+            ticks: {
+              color: '#495057'
+            },
+            grid: {
+              color: '#ebedef'
+            }
+          },
+          y: {
+            ticks: {
+              color: '#495057'
+            },
+            grid: {
+              color: '#ebedef'
+            }
+          }
+        }
+      }
+    );
+
 
     return {
-      chartData,
-      radar_data
+      fileData,
+      width,
+      fileDataOptions,
+      usersData,
+      productData
+
     };
   },
 };

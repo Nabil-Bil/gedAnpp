@@ -37,8 +37,9 @@ require_once __DIR__ . '/fortify.php';
 Route::middleware('auth')->group(function () {
     Route::prefix('dashboard')->group(function () {
         Route::get('/', [AccessController::class, 'index'])->name('dashboard.home');
-        Route::put('/user/editpassword',[UserController::class,'editPassword']);
-        Route::put('/user/profile',[UserController::class,'editProfileData']);
+        Route::put('/user/editpassword', [UserController::class, 'editPassword']);
+        Route::put('/user/profile', [UserController::class, 'editProfileData']);
+        Route::patch('/user/deleteprofilepicture', [UserController::class, 'deleteprofilepicture']);
 
         Route::middleware(['admin'])->group(function () {
             Route::post("/directions/destroy", [DirectionController::class, "destroy"]);
@@ -107,13 +108,12 @@ Route::middleware('auth')->group(function () {
         Route::middleware(['evaluateur'])->group(function () {
             Route::get("/technicalfiles", [TechnicalFileController::class, 'show']);
             Route::get("/document/{id}", [DocumentController::class, 'show'])->where('id', '^[0-9]+$');
-            Route::post('/document/{id}/sendComment',[CommentaryController::class,'store'])->where('id', '^[0-9]+$');
-            Route::delete('/document/{id}/destroyComment/{commentId}',[CommentaryController::class,'destroy'])->where('id', '^[0-9]+$')->where('commentId','^[0-9]+$');
-            
+            Route::post('/document/{id}/sendComment', [CommentaryController::class, 'store'])->where('id', '^[0-9]+$');
+            Route::delete('/document/{id}/destroyComment/{commentId}', [CommentaryController::class, 'destroy'])->where('id', '^[0-9]+$')->where('commentId', '^[0-9]+$');
         });
-        Route::middleware('directeur')->group(function(){
-            Route::get('/evaluateurs',[UserController::class,'evaluateurs']);
-            Route::post('/technicalfiles/status/{code}',[TechnicalFileController::class,'changeStatus']);
+        Route::middleware('directeur')->group(function () {
+            Route::get('/evaluateurs', [UserController::class, 'evaluateurs']);
+            Route::post('/technicalfiles/status/{code}', [TechnicalFileController::class, 'changeStatus']);
         });
     });
 });

@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('role');
             $table->foreignId("direction_id")->nullable()->constrained()->onDelete("SET NULL");
-            $table->string('path_image')->default("profilePictures/default.png");
+            $table->string('path_image')->nullable();
             $table->timestamps();
         });
         DB::statement("ALTER TABLE users ADD CONSTRAINT ck_role CHECK (role in ('administrateur','directeur','evaluateur'))");

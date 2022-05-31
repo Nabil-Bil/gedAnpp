@@ -2,7 +2,7 @@
   <div>
     <DashboardLayoutVue :UserData="user_data" :errors="errors">
       <template #Items>
-        <div class="px-10">
+        <div class="px-10 flex">
           <Button @click="active = 0" class="p-button-text" label="Devices" />
           <Button @click="active = 1" class="p-button-text" label="Designation" />
           <Button @click="active = 2" class="p-button-text" label="Classification" />

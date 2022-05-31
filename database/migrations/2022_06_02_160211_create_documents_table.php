@@ -21,7 +21,7 @@ return new class extends Migration
 
             $table->string('technical_file_code');
             $table->foreign('technical_file_code')->on('technical_files')->references('code')->onDelete('cascade');
-            
+
             $table->timestamps();
         });
     }

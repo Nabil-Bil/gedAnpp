@@ -160,7 +160,7 @@ return [
     */
 
     'attributes' => [
-        'files.*.module'=>'filess',
+        'files.*.module' => 'filess',
     ],
 
 ];

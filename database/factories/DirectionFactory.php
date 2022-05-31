@@ -17,14 +17,14 @@ class DirectionFactory extends Factory
     public function definition()
     {
         return [
-            "name"=>$this->faker->company,
-            "service"=>$this->faker->companySuffix(),
-            "one" =>rand(0,1),
-            "two" =>rand(0,1),
-            "three" =>rand(0,1),
-            "four" =>rand(0,1),
-            "five" =>rand(0,1),
-            
+            "name" => $this->faker->company,
+            "service" => $this->faker->companySuffix(),
+            "one" => rand(0, 1),
+            "two" => rand(0, 1),
+            "three" => rand(0, 1),
+            "four" => rand(0, 1),
+            "five" => rand(0, 1),
+
         ];
     }
 }

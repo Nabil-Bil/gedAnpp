@@ -17,7 +17,7 @@ class DosageFactory extends Factory
     public function definition()
     {
         return [
-            'value'=>strval(round($this->faker->numberBetween(100,1000))),
+            'value' => strval(round($this->faker->numberBetween(100, 1000))),
 
         ];
     }

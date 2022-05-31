@@ -11,27 +11,24 @@
           w-full
         ">
         <slot></slot>
-        <div></div>
-        <div class="flex items-center">
-            <slot name="profilePicture"></slot>
-            <div class="profile-picture rounded-full cursor-pointer " @click="rightSideBarVisibility = true" :style="{
-                backgroundImage: 'url(' + UserData.path_image + ')',
-            }">
+        <div class="flex items-center  w-full flex-row-reverse">
+
+            <div v-if="UserData.path_image == null" class="profile-picture rounded-full cursor-pointer "
+                @click="rightSideBarVisibility = true" v-html="svg">
             </div>
+            <div v-else class=" profile-picture w-24 h-24 bg-cover rounded-full" @click="rightSideBarVisibility = true"
+                :style="{
+                    backgroundImage: 'url(' + UserData.path_image + ')',
+                }">
+
+            </div>
+            <slot name="profilePicture"></slot>
+
         </div>
 
-        <Sidebar v-model:visible="rightSideBarVisibility" position="right" class="p-sidebar-lg">
+        <Sidebar v-model:visible="rightSideBarVisibility" position="right" class="p-sidebar-md ">
             <div class="flex flex-col justify-between h-full p-4">
-                <div class="bg-gray-50 p-10 shadow-2xl my-5">
 
-                    <div class="py-2">
-                        <h2 class="text-xl font-bold ">Email : {{ UserData.email }}</h2>
-                    </div>
-                    <div class="py-2">
-                        <h2 class="text-xl font-bold ">Direction Name : {{ UserData.direction }}</h2>
-                    </div>
-
-                </div>
                 <div class="bg-gray-50 p-10 shadow-2xl my-5">
                     <div class="h-48 flex flex-col justify-around">
                         <span class="font-semibold">Photo</span>
@@ -45,9 +42,15 @@
                                 @click="removeFile">X</div>
                         </div>
 
-                        <div v-else class="w-24 h-24 bg-cover rounded-full" :style="{
+                        <div v-else-if="UserData.path_image == null" v-html="svg"
+                            class="w-24 h-24 bg-cover rounded-full ">
+                        </div>
+                        <div v-else class="relative w-24 h-24 bg-cover rounded-full" :style="{
                             backgroundImage: 'url(' + UserData.path_image + ')',
                         }">
+                            <div class="font-bold text-xl cursor-pointer absolute top-[-10px] right-[-10px]"
+                                @click="deleteProfilePicture">X</div>
+
                         </div>
 
 
@@ -64,7 +67,7 @@
                         <label class="font-semibold" for="firstName">First Name</label>
                         <InputText placeholder="First Name..." id="firstName" v-model="profileData.firstName"
                             class="w-full" :class="errors.firstName ? 'p-invalid' : ''"></InputText>
-                            <small id="firstName" class="p-error" v-if="errors.firstName">{{ errors.firstName }}</small>
+                        <small id="firstName" class="p-error" v-if="errors.firstName">{{ errors.firstName }}</small>
                     </div>
                     <div class="py-2">
                         <label class="font-semibold" for="lastName">Last Name</label>
@@ -75,6 +78,18 @@
                     </div>
 
                     <Button label="Save" class="pi-button button-success" @click="editProdileData"></Button>
+                </div>
+                <div class="bg-gray-50 p-10 shadow-2xl my-5">
+                    <div class="py-2">
+                        <h2 class="font-semibold ">Email : </h2>
+                        <div>{{ UserData.email }}</div>
+                    </div>
+                    <div class="py-2">
+                        <h2 class="font-semibold ">Direction Name : </h2>
+                        <div>{{ UserData.direction }}</div>
+                    </div>
+
+
                 </div>
                 <div class="bg-gray-50 p-10 shadow-2xl my-5">
 
@@ -114,6 +129,10 @@
 <script>
 import { ref } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
+import { createAvatar } from '@dicebear/avatars';
+import * as style from '@dicebear/avatars-initials-sprites';
+
+
 export default {
     setup(props) {
 
@@ -123,6 +142,13 @@ export default {
             lastName: props.UserData.last_name,
             profilePictureFile: null
         });
+        let svg = createAvatar(style, {
+            seed: `${props.UserData.first_name}-${props.UserData.last_name}`,
+            radius: 9999,
+            backgroundColor: '#0d89ec' // ... and other options
+        });
+
+
 
 
         const password = ref({
@@ -133,7 +159,6 @@ export default {
         const editProdileData = () => {
             Inertia.put('/dashboard/user/profile', { ...profileData.value })
             profileData.value.profilePictureFile = null
-
         }
         const editPassword = () => {
             Inertia.put('/dashboard/user/editpassword', { ...password.value });
@@ -162,6 +187,10 @@ export default {
             profilePicture.value.value = null
 
         }
+        const deleteProfilePicture = () => {
+            Inertia.patch('/dashboard/user/deleteprofilepicture');
+        }
+
         return {
             rightSideBarVisibility,
             logout,
@@ -171,7 +200,9 @@ export default {
             profileData,
             changeProfilePicture,
             removeFile,
-            editProdileData
+            editProdileData,
+            svg,
+            deleteProfilePicture
         }
 
     },

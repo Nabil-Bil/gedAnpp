@@ -1,8 +1,7 @@
 <template>
     <UserLayoutVue :userData="userData" :errors="errors">
         <template #navbar v-if="userData.role == 'directeur'">
-            <Button class="p-button-rounded border p-button-link " icon="pi pi-user"
-                @click="evaluateurs()"></Button>
+            <Button class="p-button-rounded border p-button-link " icon="pi pi-user" @click="evaluateurs()"></Button>
 
         </template>
         <form class="card p-24 upload-data " @submit.prevent="search" id="form">
@@ -105,6 +104,7 @@
             </div>
         </form>
     </UserLayoutVue>
+
 </template>
 
 <script>
@@ -117,7 +117,6 @@ export default {
         UserLayoutVue,
     },
     setup(props) {
-
 
         const getInitialMedicationData = () => {
             return {
@@ -212,7 +211,7 @@ export default {
             globalInputs,
             medicationStatus,
             deviceStatus,
-            evaluateurs
+            evaluateurs,
         };
     },
 
@@ -221,7 +220,7 @@ export default {
         'dosages',
         'forms',
         'presentations',
-        'dcis','errors'],
+        'dcis', 'errors'],
 };
 </script>
 

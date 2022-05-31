@@ -17,15 +17,15 @@ return new class extends Migration
             $table->id();
             $table->string("name");
             $table->string("email");
-            $table->string("fixed");//Numéro de telephone fixe
+            $table->string("fixed"); //Numéro de telephone fixe
             $table->string("mobile");
             $table->string("fax");
             $table->string("address");
             $table->string("nature");
-            $table->string("agreement");//Agrément
+            $table->string("agreement"); //Agrément
             $table->string("status");
-            $table->string("manager_name");//Nom du garant
-            $table->string("tech_manager_name");// nom du directeur technique
+            $table->string("manager_name"); //Nom du garant
+            $table->string("tech_manager_name"); // nom du directeur technique
             $table->string("activity");
             $table->timestamps();
         });

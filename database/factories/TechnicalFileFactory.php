@@ -18,7 +18,7 @@ class TechnicalFileFactory extends Factory
      */
     public function definition()
     {
-        $code=$this->faker->unique()->word();
+        $code = $this->faker->unique()->word();
         $medicationStatus = [
             "Réception",
             "Recevable",
@@ -38,22 +38,23 @@ class TechnicalFileFactory extends Factory
             "DH remise",
         ];
 
-        $random=rand(0,1);
+        $random = rand(0, 1);
 
-        $dci_medication_id= $random%2==0?Medication::all()[rand(1,99)]->dcis[0]->id:null;
-        $device_code=$random%2==1?Device::all()[rand(1,99)]->code:null;
-        $status='';
-        if($dci_medication_id==null){
-            $status=$deviceStatus[rand(0,count($deviceStatus)-1)];
-        }else{
-            $status=$medicationStatus[rand(0,count($medicationStatus)-1)];
+        $dci_medication_id = $random % 2 == 0 ? Medication::all()[rand(1, 99)]->dcis[0]->id : null;
+        $device_code = $random % 2 == 1 ? Device::all()[rand(1, 99)]->code : null;
+        $status = '';
+        if ($dci_medication_id == null) {
+            $status = $deviceStatus[rand(0, count($deviceStatus) - 1)];
+        } else {
+            $status = $medicationStatus[rand(0, count($medicationStatus) - 1)];
         }
         return [
-            'code' =>$code,
-            'status'=>$status,
-            'dci_medication_id'=>$dci_medication_id,
-            'device_code'=>$device_code,
-            
+            'code' => $code,
+            'status' => $status,
+            'dci_medication_id' => $dci_medication_id,
+            'device_code' => $device_code,
+            'created_at' => $this->faker->dateTimeThisYear('31-12-2022')
+
         ];
     }
 }

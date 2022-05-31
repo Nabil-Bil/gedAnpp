@@ -16,6 +16,5 @@ class PharmaceuticalEstablishementSeeder extends Seeder
     public function run()
     {
         PharmaceuticalEstablishment::factory(100)->create();
-
     }
 }

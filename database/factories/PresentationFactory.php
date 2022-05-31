@@ -17,7 +17,7 @@ class PresentationFactory extends Factory
     public function definition()
     {
         return [
-            'value'=>$this->faker->words(3,true),
+            'value' => $this->faker->words(3, true),
         ];
     }
 }

@@ -5,16 +5,16 @@
       class="
         w-full
         min-h-screen
-        bg-gray-50
         flex flex-col
-        sm:justify-center
+        justify-center
         items-center
         pt-6
         sm:pt-0
+        bg-gray-100
       "
     >
-      <div class="w-full sm:max-w-md p-5 mx-auto">
-        <h2 class="mb-12 text-center text-5xl font-extrabold">Welcome.</h2>
+      <div class="flex items-center justify-center bg-gray-50 p-36 rounded-xl">
+        <img src="../assets/ANPP.svg" class="mr-20" />
         <form @submit.prevent="login" method="post">
           <div class="mb-4">
             <!-- <label class="block mb-1" for="email">Email-Address</label> -->
@@ -49,22 +49,7 @@
               <small id="password-error" class="p-error">{{errors.password}}</small>
               
           </div>
-          <div class="mt-6 flex items-center justify-between">
-            <div class="flex items-center">
-              <CheckBox
-                id="remember_me"
-                v-model="remember_me"
-                :binary="true"
-              ></CheckBox>
-              <label
-                for="remember_me"
-                class="ml-2 block text-sm leading-5 text-gray-900"
-              >
-                Remember me
-              </label>
-            </div>
-            <a href="#" class="text-sm"> Forgot your password? </a>
-          </div>
+          
           <div class="mt-6">
             <Button
               class="

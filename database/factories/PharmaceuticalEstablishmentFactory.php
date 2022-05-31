@@ -17,18 +17,18 @@ class PharmaceuticalEstablishmentFactory extends Factory
     public function definition()
     {
         return [
-            'name'=>$this->faker->company(),
-            'email'=>$this->faker->companyEmail(),
-            'fixed'=>$this->faker->tollFreePhoneNumber(),
-            'mobile'=>$this->faker->phoneNumber(),
-            'fax'=>$this->faker->e164PhoneNumber(),
-            'address'=>$this->faker->address(),
-            'nature'=>$this->faker->word(),
-            'agreement'=>$this->faker->sentence(3,false),
-            'status'=>$this->faker->word(),
-            'manager_name'=>$this->faker->name(),
-            'tech_manager_name'=>$this->faker->name(),
-            'activity'=>$this->faker->words(2,true),
+            'name' => $this->faker->company(),
+            'email' => $this->faker->companyEmail(),
+            'fixed' => $this->faker->tollFreePhoneNumber(),
+            'mobile' => $this->faker->phoneNumber(),
+            'fax' => $this->faker->e164PhoneNumber(),
+            'address' => $this->faker->address(),
+            'nature' => $this->faker->word(),
+            'agreement' => $this->faker->sentence(3, false),
+            'status' => $this->faker->word(),
+            'manager_name' => $this->faker->name(),
+            'tech_manager_name' => $this->faker->name(),
+            'activity' => $this->faker->words(2, true),
 
 
         ];

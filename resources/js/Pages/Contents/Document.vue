@@ -2,17 +2,27 @@
     <UserLayoutVue :userData="userData" :errors="errors">
         <template #navbar>
             <Button class="p-button-rounded p-button-link" icon="pi pi-home" @click="home()"></Button>
+            <div class="flex justify-self-center pl-[45%]">
+                <div class="mx-2">
+                    <Button class="p-button-raised p-button-rounded mx-2" icon="pi pi-plus" @click="zoom"></Button>
+                </div>
+                <div class="mx-2">
+                    <Button class="p-button-raised p-button-rounded " icon="pi pi-minus" @click="dezoom"></Button>
+                </div>
+
+
+
+            </div>
         </template>
         <template #profilePicture>
             <div class="mx-10">
                 <Button @click="chatVisibility = true" class="p-button-rounded" icon="pi pi-comments"></Button>
             </div>
         </template>
-
         <div class="flex flex-col justify-center  items-center my-20 ">
             <div class="border-2 border-gray-900  m-5 w-max h-max" v-for="i in numberOfPages" :key="i">
                 <VuePdfEmbed :source="document.path" :disableTextLayer="true" :disableAnnotationLayer="true"
-                    :height="height" :page="1" @contextmenu.prevent />
+                    :height="height.height" :page="1" @contextmenu.prevent :id="'page-' + i" />
             </div>
         </div>
         <Sidebar v-model:visible="chatVisibility" position="right" class="p-sidebar-md">
@@ -31,7 +41,8 @@
                             </div>
 
                             <Button class=" p-button-rounded p-button-danger p-button-outlined"
-                                v-if="commentary.user_id == userData.id" icon="pi pi-trash" @click="destroy(commentary.id)"></Button>
+                                v-if="commentary.user_id == userData.id" icon="pi pi-trash"
+                                @click="destroy(commentary.id)"></Button>
 
                         </div>
 
@@ -72,7 +83,10 @@ import { ref, onMounted } from 'vue'
 export default {
     setup(props) {
 
-        const height = ref(window.innerHeight)
+        const height = ref({
+            level: 3,
+            height: window.innerHeight
+        })
         const chatVisibility = ref(false);
         const comment = ref('');
         onMounted(() => {
@@ -81,6 +95,21 @@ export default {
             navbar.classList.add('z-50')
 
         })
+
+        const zoom = () => {
+            if (height.value.level < 7) {
+                height.value.height += +200
+                height.value.level += 1
+            }
+
+        }
+
+        const dezoom = () => {
+              if (height.value.level > 1) {
+                height.value.height += -200
+                height.value.level -= 1
+            }
+        }
 
 
         const home = () => {
@@ -94,7 +123,7 @@ export default {
 
             comment.value = ''
         }
-        const destroy=(id)=>{
+        const destroy = (id) => {
             Inertia.delete(`/dashboard/document/${props.document.id}/destroyComment/${id}`, { comment: comment.value })
         }
         return {
@@ -103,7 +132,10 @@ export default {
             chatVisibility,
             comment,
             sendComment,
-            destroy
+            destroy,
+            zoom,
+            dezoom
+
         }
     },
     components: {
@@ -112,7 +144,7 @@ export default {
 
 
     },
-    props: ['userData', 'document', 'numberOfPages', 'commentaries',"errors"],
+    props: ['userData', 'document', 'numberOfPages', 'commentaries', "errors"],
 
 }
 </script>

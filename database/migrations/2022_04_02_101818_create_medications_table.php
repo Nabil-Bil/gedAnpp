@@ -17,7 +17,7 @@ return new class extends Migration
             $table->String('code')->primary();
             $table->string('name');
             $table->string('type');
-            $table->string('de_holder');//Detenteur DE
+            $table->string('de_holder'); //Detenteur DE
             $table->string('conditioning');
             $table->foreignId('pharmaceutical_establishment_id')->nullable()->constrained()->onDelete('SET NULL');
             $table->foreignId('form_id')->nullable()->constrained()->onDelete('SET NULL');

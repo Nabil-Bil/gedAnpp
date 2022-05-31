@@ -21,15 +21,16 @@ class MedicationFactory extends Factory
     public function definition()
     {
         return [
-            'code'=>$this->faker->unique()->word(),
-            'name'=>$this->faker->word(),
-            'type'=>$this->faker->word(),
-            'de_holder'=>$this->faker->words(3,true),
-            'conditioning'=>$this->faker->word(),
-            'pharmaceutical_establishment_id'=>rand(1,PharmaceuticalEstablishment::all()->count()),
-            'form_id'=>rand(1,Form::all()->count()),
-            'presentation_id'=>rand(1,Presentation::all()->count()),
-            'dosage_id'=>rand(1,Dosage::all()->count()),
+            'code' => $this->faker->unique()->word(),
+            'name' => $this->faker->word(),
+            'type' => $this->faker->word(),
+            'de_holder' => $this->faker->words(3, true),
+            'conditioning' => $this->faker->word(),
+            'pharmaceutical_establishment_id' => rand(1, PharmaceuticalEstablishment::all()->count()),
+            'form_id' => rand(1, Form::all()->count()),
+            'presentation_id' => rand(1, Presentation::all()->count()),
+            'dosage_id' => rand(1, Dosage::all()->count()),
+            'created_at' => $this->faker->dateTimeThisYear('31-12-2022')
         ];
     }
 }

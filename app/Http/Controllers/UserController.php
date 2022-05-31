@@ -206,6 +206,13 @@ class UserController extends Controller
        return Redirect::back();
     }
 
+    function deleteprofilepicture(){
+        Auth::user()->update([
+            'path_image'=>null
+        ]);
+        return Redirect::back();
+    }
+
 
 
 }

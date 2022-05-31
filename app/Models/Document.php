@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Document extends Model
 {
     use HasFactory;
-    protected $guarded=[];
+    protected $guarded = [];
     public function getCreatedAtAttribute($value)
     {
         return Carbon::parse($value)->format('d/m/Y');
@@ -17,10 +17,6 @@ class Document extends Model
 
     public function commentaries()
     {
-       return $this->hasMany(Commentary::class)->select('id','content','user_id','created_at');
+        return $this->hasMany(Commentary::class)->select('id', 'content', 'user_id', 'created_at');
     }
-
-
-
-
 }

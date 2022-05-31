@@ -16,9 +16,9 @@ class DocumentFactory extends Factory
      */
     public function definition()
     {
-        $fileName=str_replace(' ','',$this->faker->word()) ;
+        $fileName = str_replace(' ', '', $this->faker->word());
         return [
-            'name'=>$fileName,
+            'name' => $fileName,
         ];
     }
 }

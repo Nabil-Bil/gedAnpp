@@ -55,12 +55,10 @@ class User extends Authenticatable
 
     public function direction()
     {
-        return $this->belongsTo(Direction::class,'direction_id');
+        return $this->belongsTo(Direction::class, 'direction_id');
     }
     public function directionModules()
     {
-        return $this->belongsTo(Direction::class,'direction_id')->select('one','two','three','four','five');
-
+        return $this->belongsTo(Direction::class, 'direction_id')->select('one', 'two', 'three', 'four', 'five');
     }
-
 }
