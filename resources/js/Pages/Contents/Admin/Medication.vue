@@ -14,7 +14,7 @@
 
         <TabPanel header="Medication">
           <MedicationData :dosages="dosages" :errors="errors" :forms="forms" :medications="medications"
-            :pharmaceutical_establishments="pharmaceutical_establishments" :presentations="presentations" />
+            :pharmaceutical_establishments="pharmaceutical_establishments" :presentations="presentations" :dcis="dcis" />
 
         </TabPanel>
         <TabPanel header="Actif Ingredient">

@@ -13,7 +13,7 @@
         bg-gray-100
       "
     >
-      <div class="flex items-center justify-center bg-gray-50 p-36 rounded-xl">
+      <div class="flex items-center justify-center bg-gray-50 p-36 rounded-xl shadow-xl">
         <img src="../assets/ANPP.svg" class="mr-20" />
         <form @submit.prevent="login" method="post">
           <div class="mb-4">

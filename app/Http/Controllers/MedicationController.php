@@ -24,7 +24,13 @@ class MedicationController extends Controller
     {
         $allMedications = [];
         foreach (Medication::orderBy('created_at', 'DESC')->get() as $medication) {
-
+            $dcis=[];
+            foreach ( $medication->dcis->toArray() as $value){
+                array_push($dcis,[
+                    'id'=>$value['id'],
+                    'value'=>$value['value'],
+                ]);
+            }
             array_push($allMedications, [
                 'code' => $medication->code,
                 'name' => $medication->name,
@@ -43,6 +49,9 @@ class MedicationController extends Controller
 
                 'presentation_id' => $medication->presentation ? $medication->presentation->id : 0,
                 'presentation' => $medication->presentation ? $medication->presentation->value : "Unknwon",
+
+                'dcis'=>$dcis,
+
 
                 "created_at" => $medication->created_at
             ]);

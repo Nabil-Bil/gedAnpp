@@ -1,7 +1,7 @@
 <template>
   <div class="card">
-    <DataTable stripedRows editMode="row" @cell-edit-complete="onRowEditSave" class="editable-cells-table"
-      :paginator="true" :rows="10" showGridlines :value="medications" dataKey="code"
+    <DataTable stripedRows editMode="row" @cell-edit-complete="onRowEditSave" class="editable-cells-table w-full"
+      :paginator="true" :rows="10" showGridlines :value="medications" dataKey="code" 
       v-model:selection="selectedMedication" v-model:filters="filters" filterDisplay="menu"
       v-model:editingRows="editingRows" @row-edit-save="onRowEditSave" :globalFilterFields="[
         'code',
@@ -39,28 +39,28 @@
       </template>
       <template #empty> No Medication found. </template>
       <template #loading> Loading Medication data. Please wait. </template>
-      <Column selectionMode="multiple" style="width: 5%; text-align: center; justify-content: center"></Column>
-      <Column header="Code" style="width: 10%; text-align: center" field="code" :sortable="true">
+      <Column selectionMode="multiple" style="width: 1%; text-align: center; justify-content: center"></Column>
+      <Column header="Code" style="width: 8%; text-align: center" field="code" :sortable="true">
         <template #editor="{ data, field }">
           <InputText v-model="data[field]" />
         </template>
       </Column>
-      <Column header="Name" style="width: 10%; text-align: center" field="name" :sortable="true">
+      <Column header="Name" style="width: 8%; text-align: center" field="name" :sortable="true">
         <template #editor="{ data, field }">
           <InputText v-model="data[field]" />
         </template>
       </Column>
-      <Column header="Type" style="width: 10%; text-align: center" field="type" :sortable="true">
+      <Column header="Type" style="width: 8%; text-align: center" field="type" :sortable="true">
         <template #editor="{ data, field }">
           <InputText v-model="data[field]" />
         </template>
       </Column>
-      <Column header="DE holder" style="width: 10%; text-align: center" field="de_holder" :sortable="true">
+      <Column header="DE holder" style="width: 8%; text-align: center" field="de_holder" :sortable="true">
         <template #editor="{ data, field }">
           <InputText v-model="data[field]" />
         </template>
       </Column>
-      <Column header="Conditioning" style="width: 10%; text-align: center" field="conditioning" :sortable="true">
+      <Column header="Conditioning" style="width: 8%; text-align: center" field="conditioning" :sortable="true">
         <template #editor="{ data, field }">
           <InputText v-model="data[field]" />
         </template>
@@ -73,23 +73,34 @@
             filterPlaceholder="Find Pharmaceutical Establishment" class="w-full" />
         </template>
       </Column>
-      <Column header="Form" style="width: 10%; text-align: center" field="form" :sortable="true">
+      <Column header="Form" style="width: 8%; text-align: center" field="form" :sortable="true">
         <template #editor="{ data, field }">
           <Dropdown v-model="data[field]" :options="forms" optionLabel="value" placeholder="Select New Form"
             :filter="true" filterPlaceholder="Find Form" class="w-full" />
         </template>
       </Column>
-      <Column header="Dosage" style="width: 10%; text-align: center" field="dosage" :sortable="true">
+      <Column header="Dosage" style="width: 8%; text-align: center" field="dosage" :sortable="true">
         <template #editor="{ data, field }">
           <Dropdown v-model="data[field]" :options="dosages" optionLabel="value" placeholder="Select New Dosage"
             :filter="true" filterPlaceholder="Find Dosage" class="w-full" />
         </template>
       </Column>
-      <Column header="Presentation" style="width: 10%; text-align: center" field="presentation" :sortable="true">
+      <Column header="Presentation" style="width: 8%; text-align: center" field="presentation" :sortable="true">
         <template #editor="{ data, field }">
           <Dropdown v-model="data[field]" :options="presentations" optionLabel="value"
             placeholder="Select New Presentation" :filter="true" filterPlaceholder="Find Presentation" class="w-full" />
         </template>
+      </Column>
+      <Column header="Actif Ingerdients" style="width: 20%; text-align: center" field="dcis" >
+        <template #body="{ data, field }">
+          <span v-for="d of data[field]" :key="d">
+            {{ d.value }}, &nbsp;
+          </span>
+          <div v-if="data[field].length == 0">
+            None
+          </div>
+        </template>
+        
       </Column>
       <Column header="Status" style="width: 10%; text-align: center" field="status" :sortable="true">
 
@@ -272,6 +283,7 @@ export default {
     "medications",
     "pharmaceutical_establishments",
     "errors",
+    "dcis"
   ],
 };
 </script>

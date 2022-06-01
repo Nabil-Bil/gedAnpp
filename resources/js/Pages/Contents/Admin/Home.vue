@@ -1,25 +1,39 @@
 <template>
-  <DashboardLayoutVue :UserData="user_data" :errors="errors" >
-    <div class="flex flex-col justify-around mt-5 px-10 ">
+  <DashboardLayoutVue :UserData="user_data" :errors="errors">
+    <div class="flex flex-col justify-around my-5 px-10 ">
       <div class="
-       px-10 p-2 card rounded-lg w-full bg-white ">
+       px-10 p-2 card rounded-lg w-full bg-white shadow-xl">
+        <h2 class="font-semibold text-xl">The technical files created over the whole year</h2>
+
         <Chart type="line" :options="fileDataOptions" :data='fileData' :height="300" :width="width" />
       </div>
       <div class="flex my-4 flex-wrap justify-between">
         <div class="
-            px-10 p-2  card rounded-lg w-max bg-white ">
+            px-10 p-5  card rounded-lg w-max bg-white shadow-xl">
+          <h2 class="font-semibold text-lg">
+           The number of users in each role
+
+          </h2>
+
+
           <Chart type="doughnut" :data='usersData' :height="300" :options="{ responsive: false }"
             :width="width / 3.5" />
         </div>
         <div class="
-            px-10 p-2  card rounded-lg w-max bg-white  ">
-          <Chart type="bar" :data='productData' :height="300" :options="{ responsive: false }" :width="width / 3.5" />
+            px-10 p-5  card rounded-lg w-max bg-white  shadow-xl">
+          <Chart type="line" :options="fileDataOptions" :data='productData' :height="300" :width="width/1.5" />
         </div>
-        <div class="
-            px-10 p-2  card rounded-lg w-max bg-white  ">
-          <Chart type="line" :options="fileDataOptions" :data='productData' :height="300" :width="width/3.5" />
-        </div>
+        
+       
       </div>
+      <div class="
+            px-10 p-5  card rounded-lg w-full bg-white  shadow-xl">
+          <h2 class="font-semibold text-lg">
+            The number of medications and devices recorded over the whole year
+          </h2>
+          <Chart type="bar" :data='productData' :height="300" :options="{ responsive: false }" :width="width " />
+        </div>
+       
     </div>
   </DashboardLayoutVue>
 </template>
@@ -38,7 +52,7 @@ export default {
     errors: Object,
     users_number: Array,
     medications: Array,
-    devices:Array,
+    devices: Array,
   },
   setup(props) {
     const width = ref(window.innerWidth - 200);
@@ -79,7 +93,7 @@ export default {
           data: props.medications,
           backgroundColor: '#42A5F5',
         },
-         {
+        {
           label: 'Device',
           backgroundColor: '#FFA726',
           data: props.devices,
