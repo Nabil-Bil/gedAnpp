@@ -13,9 +13,9 @@
         bg-gray-100
       "
     >
-      <div class="flex items-center justify-center bg-gray-50 p-36 rounded-xl shadow-xl">
+      <div class="flex items-center justify-center bg-gray-50 p-36 rounded-xl shadow-xl ">
         <img src="../assets/ANPP.svg" class="mr-20" />
-        <form @submit.prevent="login" method="post">
+        <form @submit.prevent="login" method="post" class="w-96">
           <div class="mb-4">
             <!-- <label class="block mb-1" for="email">Email-Address</label> -->
             <span class="p-float-label p-input-icon-left w-full my-4">

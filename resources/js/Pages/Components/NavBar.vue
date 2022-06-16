@@ -16,7 +16,7 @@
             <div v-if="UserData.path_image == null" class="profile-picture rounded-full cursor-pointer "
                 @click="rightSideBarVisibility = true" v-html="svg">
             </div>
-            <div v-else class=" profile-picture w-24 h-24 bg-cover rounded-full" @click="rightSideBarVisibility = true"
+            <div v-else class=" profile-picture w-24 h-24 bg-cover rounded-full cursor-pointer" @click="rightSideBarVisibility = true"
                 :style="{
                     backgroundImage: 'url(' + UserData.path_image + ')',
                 }">

@@ -276,6 +276,7 @@ class TechnicalFileController extends Controller
                 "classification" => $request->classification,
                 "pharmaceutical_establishment" => $request->pharmaceutical_establishment
             ];
+
             if (!empty($request->file())) {
 
                 foreach ($request->file('files') as $key => $file) {
@@ -288,7 +289,7 @@ class TechnicalFileController extends Controller
             $newRequest = new Request($data);
             $newRequest->validate([
                 'code' => ['required', Rule::Unique('technical_files', 'code')],
-                'pharmaceutical_establishment' => ['required', Rule::exists('medications', 'pharmaceutical_establishment_id')],
+                'pharmaceutical_establishment' => ['required', Rule::exists('devices', 'pharmaceutical_establishment_id')],
                 'status' => ['required', Rule::in([
                     "Réception",
                     "Recevable",
