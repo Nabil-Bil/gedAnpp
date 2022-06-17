@@ -91,17 +91,6 @@
             placeholder="Select New Presentation" :filter="true" filterPlaceholder="Find Presentation" class="w-full" />
         </template>
       </Column>
-      <Column header="Actif Ingerdients" style="width: 20%; text-align: center" field="dcis" >
-        <template #body="{ data, field }">
-          <span v-for="d of data[field]" :key="d">
-            {{ d.value }}, &nbsp;
-          </span>
-          <div v-if="data[field].length == 0">
-            None
-          </div>
-        </template>
-        
-      </Column>
       <Column header="Status" style="width: 10%; text-align: center" field="status" :sortable="true">
 
         <template #editor="{ data, field }">
@@ -176,7 +165,6 @@ export default {
     }
     function onRowEditSave(event) {
       let { newData, index } = event;
-
       let oldCode = props.medications[index].code;
       props.medications[index] = {
         code: newData.code,
@@ -200,6 +188,7 @@ export default {
         presentation: newData.presentation.value
           ? newData.presentation.value
           : newData.presentation,
+
         status: newData.status,
         created_at: newData.created_at
       };
